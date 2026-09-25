@@ -1,12 +1,16 @@
 @extends('layouts.app')
 @section('title', ($category->exists ? 'Edit' : 'Tambah') . ' Kategori')
 @section('content')
-<h1 class="text-2xl font-bold">{{ $category->exists ? 'Edit' : 'Tambah' }} Kategori</h1>
-<form method="POST" action="{{ $category->exists ? route('admin.categories.update', $category) : route('admin.categories.store') }}" class="mt-6 max-w-lg space-y-4 rounded-2xl border bg-white p-6">
+<h1 class="text-2xl font-black tracking-tight">{{ $category->exists ? '✏️ Edit' : '➕ Tambah' }} Kategori</h1>
+<form method="POST" action="{{ $category->exists ? route('admin.categories.update', $category) : route('admin.categories.store') }}"
+    class="mt-5 max-w-lg space-y-4 rounded-3xl border border-gray-200/70 bg-white p-6 sm:p-8 dark:bg-gray-900 dark:border-white/10">
     @csrf
     @if($category->exists) @method('PUT') @endif
-    <div><label class="text-sm font-medium">Nama</label><input name="name" value="{{ old('name', $category->name) }}" required class="mt-1 w-full rounded-xl border px-4 py-2.5"></div>
-    <button class="rounded-xl bg-black px-6 py-3 font-medium text-white">Simpan</button>
-    <a href="{{ route('admin.categories.index') }}" class="ml-2 text-sm text-gray-500">Batal</a>
+    <div><label class="text-sm font-bold">Nama kategori</label><input name="name" value="{{ old('name', $category->name) }}" required placeholder="Contoh: Sneakers"
+        class="mt-1.5 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm dark:bg-white/5 dark:border-white/10 outline-none focus:border-indigo-400"></div>
+    <div class="flex items-center gap-3">
+        <button class="rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 px-7 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-600/25">💾 Simpan</button>
+        <a href="{{ route('admin.categories.index') }}" class="text-sm text-gray-400">Batal</a>
+    </div>
 </form>
 @endsection
