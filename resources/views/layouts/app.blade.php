@@ -17,23 +17,23 @@
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50 text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300">
+<body class="min-h-screen flex flex-col bg-gray-50 text-gray-900 antialiased dark:bg-night-950 dark:text-cream-100 transition-colors duration-300">
 
 {{-- Announcement bar --}}
-<div class="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 text-white text-center text-xs sm:text-sm py-2 px-4">
-    🚚 Gratis ongkir untuk pembelian pertama &nbsp;·&nbsp; Gunakan kode <span class="font-bold tracking-wide">HEMAT10</span>
+<div class="bg-night-950 text-cream-100 dark:bg-night-800 dark:border-b dark:border-cream-100/10 text-center text-xs sm:text-sm py-2 px-4">
+    🚚 Gratis ongkir untuk pembelian pertama &nbsp;·&nbsp; Gunakan kode <span class="font-bold tracking-wide text-sage-300">HEMAT10</span>
 </div>
 
 {{-- Navbar --}}
-<header class="sticky top-0 z-40 border-b border-gray-200/70 bg-white/80 backdrop-blur-xl dark:bg-gray-950/80 dark:border-white/10">
+<header class="sticky top-0 z-40 border-b border-gray-200/70 bg-white/80 backdrop-blur-xl dark:bg-night-950/90 dark:border-cream-100/15">
     <div class="mx-auto max-w-7xl px-4 sm:px-6">
         <div class="flex h-16 items-center justify-between gap-3">
             {{-- Logo --}}
             <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0">
-                <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white font-black text-lg shadow-lg shadow-indigo-600/25">S</span>
+                <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 text-white font-black text-lg shadow-lg shadow-night-900/25 dark:shadow-black/50">S</span>
                 <span class="leading-tight">
                     <span class="block font-extrabold tracking-tight text-lg">Shopedia</span>
-                    <span class="hidden sm:block text-[11px] uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">Modern Store</span>
+                    <span class="hidden sm:block text-[11px] uppercase tracking-[0.2em] text-gray-400 dark:text-sage-400">Modern Store</span>
                 </span>
             </a>
 
@@ -42,47 +42,47 @@
                 <div class="relative w-full">
                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">⌕</span>
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari sneakers, kopi, skincare..."
-                        class="w-full rounded-full border border-gray-200 bg-gray-100/70 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:bg-white/5 dark:border-white/10 dark:focus:bg-gray-900 dark:focus:border-indigo-500 transition" />
+                        class="w-full rounded-full border border-gray-200 bg-gray-100/70 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-indigo-400 dark:focus:border-sage-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-sage-500/20 dark:bg-cream-100/5 dark:border-cream-100/15 dark:focus:bg-night-800 dark:focus:border-sage-500 transition" />
                 </div>
             </form>
 
             {{-- Actions --}}
             <nav class="flex items-center gap-1.5 sm:gap-2 text-sm">
-                <a href="{{ route('products.index') }}" class="hidden sm:inline-flex rounded-full px-3.5 py-2 font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white transition">Katalog</a>
+                <a href="{{ route('products.index') }}" class="hidden sm:inline-flex rounded-full px-3.5 py-2 font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-cream-100/80 dark:hover:bg-cream-100/10 dark:hover:text-white transition">Katalog</a>
 
                 {{-- Dark toggle --}}
                 <button type="button" data-theme-toggle data-theme-icon aria-label="Mode gelap"
-                    class="grid h-10 w-10 place-items-center rounded-full border border-gray-200 text-lg hover:bg-gray-100 dark:border-white/10 dark:hover:bg-white/10 transition">
+                    class="grid h-10 w-10 place-items-center rounded-full border border-gray-200 text-lg hover:bg-gray-100 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">
                     <span data-icon-moon>🌙</span>
                     <span data-icon-sun class="hidden">☀️</span>
                 </button>
 
                 {{-- Cart --}}
                 <a href="{{ route('cart.index') }}"
-                   class="relative grid h-10 w-10 place-items-center rounded-full border border-gray-200 hover:bg-gray-100 dark:border-white/10 dark:hover:bg-white/10 transition" title="Keranjang">
+                   class="relative grid h-10 w-10 place-items-center rounded-full border border-gray-200 hover:bg-gray-100 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition" title="Keranjang">
                     🛒
                     @php $cartCount = array_sum(session('cart', [])); @endphp
                     @if($cartCount > 0)
-                        <span class="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-gradient-to-r from-indigo-600 to-fuchsia-600 px-1 text-[11px] font-bold text-white shadow">{{ $cartCount }}</span>
+                        <span class="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-1 text-[11px] font-bold text-white shadow">{{ $cartCount }}</span>
                     @endif
                 </a>
 
                 @auth
-                    <a href="{{ route('orders.index') }}" class="hidden lg:inline-flex rounded-full px-3.5 py-2 font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10 transition">Pesanan</a>
+                    <a href="{{ route('orders.index') }}" class="hidden lg:inline-flex rounded-full px-3.5 py-2 font-medium text-gray-600 hover:bg-gray-100 dark:text-cream-100/80 dark:hover:bg-cream-100/10 transition">Pesanan</a>
                     @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex rounded-full bg-gray-900 px-4 py-2 font-semibold text-white hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200 transition">Admin ✨</a>
+                        <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex rounded-full bg-gray-900 px-4 py-2 font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition">Admin ✨</a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="hidden sm:inline">
                         @csrf
-                        <button class="rounded-full px-3.5 py-2 text-gray-500 hover:text-red-600 dark:text-gray-400 transition" title="Logout ({{ auth()->user()->name }})">Keluar</button>
+                        <button class="rounded-full px-3.5 py-2 text-gray-500 hover:text-red-600 dark:text-sage-300 transition" title="Logout ({{ auth()->user()->name }})">Keluar</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="rounded-full px-3.5 py-2 font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10 transition">Masuk</a>
-                    <a href="{{ route('register') }}" class="rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-2 font-semibold text-white shadow-lg shadow-indigo-600/25 hover:opacity-90 transition">Daftar</a>
+                    <a href="{{ route('login') }}" class="rounded-full px-3.5 py-2 font-medium text-gray-600 hover:bg-gray-100 dark:text-cream-100/80 dark:hover:bg-cream-100/10 transition">Masuk</a>
+                    <a href="{{ route('register') }}" class="rounded-full bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-4 py-2 font-semibold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">Daftar</a>
                 @endauth
 
                 {{-- Mobile hamburger --}}
-                <button type="button" data-menu-toggle class="sm:hidden grid h-10 w-10 place-items-center rounded-full border border-gray-200 dark:border-white/10" aria-label="Menu">☰</button>
+                <button type="button" data-menu-toggle class="sm:hidden grid h-10 w-10 place-items-center rounded-full border border-gray-200 dark:border-cream-100/15" aria-label="Menu">☰</button>
             </nav>
         </div>
 
@@ -90,18 +90,18 @@
         <div id="mobile-menu" class="hidden sm:hidden pb-4 space-y-1">
             <form method="GET" action="{{ route('products.index') }}" class="md:hidden mb-2">
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari produk..."
-                    class="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-sm dark:bg-white/5 dark:border-white/10" />
+                    class="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-sm dark:bg-cream-100/5 dark:border-cream-100/15" />
             </form>
-            <a href="{{ route('products.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-white/10 font-medium">Katalog</a>
-            <a href="{{ route('cart.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-white/10">Keranjang ({{ array_sum(session('cart', [])) }})</a>
+            <a href="{{ route('products.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-cream-100/10 font-medium">Katalog</a>
+            <a href="{{ route('cart.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-cream-100/10">Keranjang ({{ array_sum(session('cart', [])) }})</a>
             @auth
-                <a href="{{ route('orders.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-white/10">Pesanan Saya</a>
+                <a href="{{ route('orders.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-cream-100/10">Pesanan Saya</a>
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="block rounded-xl px-4 py-2.5 font-semibold text-indigo-600 dark:text-indigo-400">Admin Dashboard ✨</a>
+                    <a href="{{ route('admin.dashboard') }}" class="block rounded-xl px-4 py-2.5 font-semibold text-indigo-600 dark:text-sage-300">Admin Dashboard ✨</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">@csrf<button class="w-full text-left rounded-xl px-4 py-2.5 text-red-500">Keluar ({{ auth()->user()->name }})</button></form>
             @else
-                <a href="{{ route('login') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-white/10">Masuk</a>
+                <a href="{{ route('login') }}" class="block rounded-xl px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-cream-100/10">Masuk</a>
             @endauth
         </div>
     </div>
@@ -135,47 +135,47 @@
 </main>
 
 {{-- Footer --}}
-<footer class="mt-8 border-t border-gray-200 bg-white dark:bg-gray-900 dark:border-white/10">
+<footer class="mt-8 border-t border-gray-200 bg-white dark:bg-night-800 dark:border-cream-100/15">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 py-12 grid gap-10 md:grid-cols-4">
         <div class="md:col-span-2">
             <div class="flex items-center gap-2.5">
-                <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white font-black text-lg">S</span>
+                <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 text-white font-black text-lg">S</span>
                 <span class="font-extrabold text-lg tracking-tight">Shopedia</span>
             </div>
-            <p class="mt-3 max-w-sm text-sm leading-6 text-gray-500 dark:text-gray-400">
+            <p class="mt-3 max-w-sm text-sm leading-6 text-gray-500 dark:text-sage-300">
                 Toko online modern berbasis Laravel — katalog cepat, keranjang instan, checkout aman, dan panel admin yang rapi. Dengan dukungan dark mode otomatis. 🌗
             </p>
             <div class="mt-4 flex gap-2">
-                <button data-theme-toggle class="rounded-full border border-gray-200 px-4 py-2 text-xs font-medium hover:bg-gray-100 dark:border-white/10 dark:hover:bg-white/10 transition">🌗 Ganti tema</button>
-                <a href="{{ route('products.index') }}" class="rounded-full bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-700 dark:bg-white dark:text-gray-900 transition">Mulai belanja →</a>
+                <button data-theme-toggle class="rounded-full border border-gray-200 px-4 py-2 text-xs font-medium hover:bg-gray-100 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">🌗 Ganti tema</button>
+                <a href="{{ route('products.index') }}" class="rounded-full bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 transition">Mulai belanja →</a>
             </div>
         </div>
         <div>
             <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Belanja</h3>
             <ul class="mt-3 space-y-2 text-sm">
-                <li><a href="{{ route('products.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-gray-300">Semua produk</a></li>
-                <li><a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-gray-300">Keranjang</a></li>
-                <li><a href="{{ route('checkout.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-gray-300">Checkout</a></li>
-                <li><a href="{{ route('orders.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-gray-300">Lacak pesanan</a></li>
+                <li><a href="{{ route('products.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-cream-100/80">Semua produk</a></li>
+                <li><a href="{{ route('cart.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-cream-100/80">Keranjang</a></li>
+                <li><a href="{{ route('checkout.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-cream-100/80">Checkout</a></li>
+                <li><a href="{{ route('orders.index') }}" class="text-gray-600 hover:text-indigo-600 dark:text-cream-100/80">Lacak pesanan</a></li>
             </ul>
         </div>
         <div>
             <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Akun</h3>
             <ul class="mt-3 space-y-2 text-sm">
                 @guest
-                    <li><a href="{{ route('login') }}" class="text-gray-600 hover:text-indigo-600 dark:text-gray-300">Masuk</a></li>
-                    <li><a href="{{ route('register') }}" class="text-gray-600 hover:text-indigo-600 dark:text-gray-300">Daftar</a></li>
+                    <li><a href="{{ route('login') }}" class="text-gray-600 hover:text-indigo-600 dark:text-cream-100/80">Masuk</a></li>
+                    <li><a href="{{ route('register') }}" class="text-gray-600 hover:text-indigo-600 dark:text-cream-100/80">Daftar</a></li>
                 @else
-                    <li class="text-gray-500 dark:text-gray-400">Halo, {{ auth()->user()->name }} 👋</li>
+                    <li class="text-gray-500 dark:text-sage-300">Halo, {{ auth()->user()->name }} 👋</li>
                     @if(auth()->user()->isAdmin())
-                        <li><a href="{{ route('admin.dashboard') }}" class="text-indigo-600 dark:text-indigo-400 font-medium">Admin dashboard</a></li>
+                        <li><a href="{{ route('admin.dashboard') }}" class="text-indigo-600 dark:text-sage-300 font-medium">Admin dashboard</a></li>
                     @endif
                 @endguest
                 <li class="text-gray-400 text-xs pt-2">v1.0 · Laravel {{ app()->version() }}</li>
             </ul>
         </div>
     </div>
-    <div class="border-t border-gray-100 dark:border-white/5 py-5 text-center text-xs text-gray-400">
+    <div class="border-t border-gray-100 dark:border-cream-100/10 py-5 text-center text-xs text-gray-400">
         © {{ date('Y') }} Shopedia — dibuat dengan Laravel + Tailwind CSS 💜
     </div>
 </footer>

@@ -8,6 +8,25 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Palet earthy dari referensi: hitam-hijau, arang, sage, krem */
+    --color-night-950: #0c0f0c;
+    --color-night-900: #151814;
+    --color-night-800: #232622;
+    --color-night-700: #3a3c38;
+    --color-night-600: #4b4e47;
+
+    --color-sage-200: #c3cec0;
+    --color-sage-300: #a9b8a3;
+    --color-sage-400: #8a9b84;
+    --color-sage-500: #6e7f68;
+    --color-sage-600: #5a6854;
+    --color-sage-700: #46523f;
+
+    --color-cream-100: #f0e3c8;
+    --color-cream-200: #e6d3af;
+    --color-cream-300: #d6bf96;
+
     --color-brand-50: #eef2ff;
     --color-brand-100: #e0e7ff;
     --color-brand-500: #6366f1;
@@ -23,8 +42,22 @@ html.dark {
     color-scheme: dark;
 }
 
+html.dark body {
+    background-color: var(--color-night-950);
+    color: var(--color-cream-100);
+}
+
 body {
     text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: var(--color-sage-500);
+    color: #fff;
+}
+.dark ::selection {
+    background: var(--color-sage-500);
+    color: var(--color-night-950);
 }
 
 /* Custom scrollbar */
@@ -40,7 +73,10 @@ body {
     border-radius: 8px;
 }
 .dark ::-webkit-scrollbar-thumb {
-    background: rgb(148 163 184 / 0.25);
+    background: rgb(110 127 104 / 0.45);
+}
+.dark ::-webkit-scrollbar-track {
+    background: var(--color-night-950);
 }
 
 /* Card hover lift */
@@ -50,10 +86,20 @@ body {
 .card-lift:hover {
     transform: translateY(-4px);
 }
+.dark .card-lift:hover {
+    box-shadow: 0 20px 40px -18px rgb(0 0 0 / 0.7);
+    border-color: rgb(240 227 200 / 0.2);
+}
 
-/* Gradient text */
+/* Gradient text: indigo di light, sage→cream di dark */
 .text-gradient {
     background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.dark .text-gradient {
+    background: linear-gradient(135deg, var(--color-sage-300) 0%, var(--color-sage-500) 45%, var(--color-cream-100) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
