@@ -9,7 +9,7 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* Palet earthy dari referensi: hitam-hijau, arang, sage, krem */
+    /* Palet earthy dark mode dari referensi: hitam-hijau, arang, sage, krem */
     --color-night-950: #0c0f0c;
     --color-night-900: #151814;
     --color-night-800: #232622;
@@ -26,6 +26,23 @@
     --color-cream-100: #f0e3c8;
     --color-cream-200: #e6d3af;
     --color-cream-300: #d6bf96;
+
+    /* Palet light mode dari referensi: pink lembut, krem, peach */
+    --color-milk-50: #fcf6ec;
+    --color-milk-100: #f7edde;
+    --color-card: #fffdf8;
+    --color-line: #ead7bc;
+    --color-petal-100: #fadce2;
+    --color-petal-200: #f4c4ce;
+    --color-petal-300: #eba9b6;
+    --color-sand-200: #f6e2c1;
+    --color-sand-300: #edce9e;
+    --color-apricot-400: #e9b384;
+    --color-apricot-500: #de9a63;
+    --color-ember-600: #be6a42;
+    --color-cocoa-500: #9c7460;
+    --color-cocoa-700: #6e4d39;
+    --color-cocoa-900: #413026;
 
     --color-brand-50: #eef2ff;
     --color-brand-100: #e0e7ff;
@@ -91,9 +108,9 @@ body {
     border-color: rgb(240 227 200 / 0.2);
 }
 
-/* Gradient text: indigo di light, sage→cream di dark */
+/* Gradient text: terracotta hangat di light, sage→cream di dark */
 .text-gradient {
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+    background: linear-gradient(135deg, #b4623f 0%, #de9a63 50%, #6e7f68 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
