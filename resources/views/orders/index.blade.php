@@ -5,11 +5,13 @@
 <p class="text-sm text-cocoa-500 dark:text-sage-300">Pantau status belanjamu di sini.</p>
 @php
 $statusStyle = [
-    'pending' => 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
-    'processing' => 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300',
-    'shipped' => 'bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300',
+    'awaiting_payment' => 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
+    'awaiting_verification' => 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300',
+    'processing' => 'bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300',
+    'shipped' => 'bg-sky-100 text-sky-700 dark:bg-sky-500/10 dark:text-sky-300',
     'completed' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300',
     'cancelled' => 'bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-300',
+    'expired' => 'bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-300',
 ];
 @endphp
 <div class="mt-6 space-y-3">

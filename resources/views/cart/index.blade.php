@@ -14,14 +14,14 @@
         <p class="text-6xl">🛒</p>
         <p class="mt-4 text-lg font-extrabold">Keranjang masih kosong</p>
         <p class="text-sm text-cocoa-500 dark:text-sage-300">Yuk isi dengan barang favoritmu.</p>
-        <a href="{{ route('products.index') }}" class="mt-5 inline-block rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-7 py-3 text-sm font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50">Jelajahi Katalog →</a>
+        <a href="{{ route('products.index') }}" class="mt-5 inline-block rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-7 py-3 text-sm font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50">Jelajahi Katalog →</a>
     </div>
 @else
 <div class="mt-6 grid gap-6 lg:grid-cols-3">
     <div class="space-y-4 lg:col-span-2">
         @foreach($items as $item)
         <div class="flex gap-4 rounded-3xl border border-line/70 bg-card p-4 sm:p-5 dark:bg-night-800 dark:border-cream-100/15 card-lift">
-            <div class="grid h-24 w-24 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-cream-100 to-sage-200 text-3xl dark:from-cream-100/10 dark:to-cream-100/5">🛍️</div>
+            <div class="grid h-24 w-24 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-cream-100 to-sage-200 text-3xl dark:from-cream-100/10 dark:to-cream-100/5">🛍️</div>
             <div class="flex-1 min-w-0">
                 <a href="{{ route('products.show', $item['product']) }}" class="font-bold hover:text-cocoa-700 dark:hover:text-indigo-400 line-clamp-1 transition">{{ $item['product']->name }}</a>
                 <p class="mt-0.5 text-sm text-cocoa-500 dark:text-sage-300">Rp {{ number_format($item['product']->price, 0, ',', '.') }} / pcs</p>
@@ -56,7 +56,7 @@
             <div class="flex justify-between text-cocoa-500 dark:text-sage-300"><span>Ongkir</span><span class="font-semibold text-emerald-500">GRATIS ✨</span></div>
             <div class="border-t border-dashed border-line dark:border-cream-100/15 pt-3 flex justify-between font-black text-base"><span>Total</span><span class="text-gradient">Rp {{ number_format($total, 0, ',', '.') }}</span></div>
         </div>
-        <a href="{{ route('checkout.index') }}" class="mt-5 block rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 py-3.5 text-center font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">Checkout Sekarang →</a>
+        <a href="{{ route('checkout.index') }}" class="mt-5 block rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 py-3.5 text-center font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">Checkout Sekarang →</a>
         <p class="mt-3 text-center text-xs text-cocoa-500/70">🔒 Pembayaran aman & terenkripsi</p>
     </div>
 </div>

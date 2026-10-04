@@ -3,7 +3,7 @@
 @section('content')
 <div class="flex items-center justify-between">
     <h1 class="text-2xl font-black tracking-tight">Kategori 📂</h1>
-    <a href="{{ route('admin.categories.create') }}" class="rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">+ Kategori</a>
+    <a href="{{ route('admin.categories.create') }}" class="rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">+ Kategori</a>
 </div>
 <div class="mt-5 overflow-hidden rounded-3xl border border-line/70 bg-card dark:bg-night-800 dark:border-cream-100/15">
     <table class="w-full text-sm">

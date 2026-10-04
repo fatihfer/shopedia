@@ -2,10 +2,17 @@
 @section('title', 'Kelola Pesanan')
 @section('content')
 <h1 class="text-2xl font-black tracking-tight">Semua Pesanan 🧾</h1>
-<p class="text-sm text-cocoa-500 dark:text-sage-300">Klik ID untuk detail & update status.</p>
+<p class="text-sm text-cocoa-500 dark:text-sage-300">Klik ID untuk detail & verifikasi pembayaran.</p>
+<div class="mt-4 flex flex-wrap gap-2 text-xs font-bold">
+    @php $tabs = ['' => 'Semua', 'awaiting_verification' => 'Perlu verifikasi', 'awaiting_payment' => 'Menunggu bayar', 'processing' => 'Diproses', 'completed' => 'Selesai']; @endphp
+    @foreach($tabs as $value => $text)
+    <a href="{{ route('admin.orders.index', $value ? ['status' => $value] : []) }}"
+       class="rounded-full px-4 py-2 transition {{ $status === $value ? 'bg-night-950 text-cream-100 dark:bg-cream-100 dark:text-night-950' : 'border border-line bg-card hover:bg-milk-100 dark:border-cream-100/15 dark:hover:bg-cream-100/10' }}">{{ $text }}{{ $value === 'awaiting_verification' && $needsVerification ? " ($needsVerification)" : '' }}</a>
+    @endforeach
+</div>
 <div class="mt-5 overflow-hidden rounded-3xl border border-line/70 bg-card dark:bg-night-800 dark:border-cream-100/15">
     <div class="overflow-x-auto">
-    <table class="w-full text-sm min-w-[680px]">
+    <table class="w-full text-sm min-w-170">
         <thead class="bg-milk-100 text-left text-xs uppercase tracking-wider text-cocoa-500/70 dark:bg-cream-100/5"><tr><th class="px-5 py-3.5">ID</th><th class="px-4 py-3.5">Customer</th><th class="px-4 py-3.5">Total</th><th class="px-4 py-3.5">Status</th><th class="px-4 py-3.5">Tanggal</th></tr></thead>
         <tbody class="divide-y divide-line/60 dark:divide-cream-100/10">
         @foreach($orders as $o)

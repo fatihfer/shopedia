@@ -3,20 +3,20 @@
 @section('content')
 
 {{-- Hero --}}
-<div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-petal-200 via-milk-100 to-sand-200 text-cocoa-900 p-8 sm:p-12 shadow-xl shadow-apricot-400/20 dark:from-night-950 dark:via-night-800 dark:to-sage-600 dark:text-cream-100 dark:shadow-black/60 dark:border dark:border-cream-100/10">
+<div class="relative overflow-hidden rounded-3xl bg-linear-to-br from-petal-200 via-milk-100 to-sand-200 text-cocoa-900 p-8 sm:p-12 shadow-xl shadow-apricot-400/20 dark:from-night-950 dark:via-night-800 dark:to-sage-600 dark:text-cream-100 dark:shadow-black/60 dark:border dark:border-cream-100/10">
     <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-white/50 blur-2xl dark:bg-sage-300/20"></div>
     <div class="absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-apricot-400/30 blur-2xl dark:bg-black/30"></div>
     {{-- pita peach ala palet --}}
     <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-apricot-400/80 dark:bg-cream-100/90"></div>
-    <div class="relative max-w-2xl">
+    <div class="relative w-full">
         <p class="inline-flex items-center gap-2 rounded-full bg-white/60 px-3.5 py-1.5 text-xs font-semibold tracking-wide backdrop-blur dark:bg-cream-100/10">✨ Koleksi terbaru 2026</p>
         <h1 class="mt-4 text-3xl sm:text-5xl font-black tracking-tight leading-[1.05]">Belanja apa hari ini? <span class="text-ember-600 dark:text-cream-200">Semua ada.</span></h1>
         <p class="mt-3 text-cocoa-700/80 text-sm sm:text-base leading-6 dark:text-cream-100/70">Katalog modern dengan pencarian cepat, filter kategori, dan mode gelap yang nyaman di mata.</p>
-        <form method="GET" action="{{ route('products.index') }}" class="mt-6 flex flex-col sm:flex-row gap-2.5">
+        {{-- <form method="GET" action="{{ route('products.index') }}" class="mt-6 flex flex-col sm:flex-row gap-2.5">
             <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari sneakers, kopi, skincare..."
                 class="flex-1 rounded-2xl border-0 bg-card dark:bg-cream-100 px-5 py-3.5 text-sm text-cocoa-900 placeholder:text-cocoa-500/60 outline-none focus:ring-4 focus:ring-apricot-400/40" />
             <button class="rounded-2xl bg-night-950 px-6 py-3.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition">Cari 🔍</button>
-        </form>
+        </form> --}}
     </div>
     <div class="relative mt-6 flex flex-wrap gap-2 text-xs">
         <span class="text-cocoa-500 font-medium py-2 dark:text-cream-100/60">Populer:</span>
@@ -53,7 +53,7 @@
     @forelse ($products as $product)
         <a href="{{ route('products.show', $product) }}"
            class="card-lift group overflow-hidden rounded-3xl border border-line/70 bg-card hover:shadow-2xl hover:shadow-apricot-400/20 hover:border-sand-300 dark:bg-night-800 dark:border-cream-100/15 dark:hover:border-sage-500/30">
-            <div class="relative aspect-square bg-gradient-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10 overflow-hidden">
+            <div class="relative aspect-square bg-linear-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10 overflow-hidden">
                 @if ($product->image_path)
                     <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}"
                          class="h-full w-full object-cover transition duration-500 group-hover:scale-105">

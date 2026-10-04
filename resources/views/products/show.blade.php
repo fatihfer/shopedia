@@ -6,7 +6,7 @@
 <div class="mt-4 grid gap-6 lg:grid-cols-2">
     {{-- Gallery --}}
     <div class="overflow-hidden rounded-3xl border border-line/70 bg-card dark:bg-night-800 dark:border-cream-100/15 shadow-sm">
-        <div class="relative aspect-square bg-gradient-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10">
+        <div class="relative aspect-square bg-linear-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10">
             @if ($product->image_path)
                 <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
             @else
@@ -32,7 +32,7 @@
             <p class="text-3xl font-black text-gradient">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
         </div>
 
-        <div class="my-6 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-white/10"></div>
+        <div class="my-6 h-px bg-linear-to-r from-transparent via-gray-200 to-transparent dark:via-white/10"></div>
 
         <h2 class="text-sm font-bold uppercase tracking-wider text-cocoa-500/70">Deskripsi</h2>
         <p class="mt-2 text-[15px] leading-7 text-cocoa-700 dark:text-cream-100/80">{{ $product->description ?? 'Belum ada deskripsi untuk produk ini.' }}</p>
@@ -47,7 +47,7 @@
                 @endif
             </div>
             <div class="mt-2.5 h-2 overflow-hidden rounded-full bg-sand-200 dark:bg-cream-100/10">
-                <div class="h-full rounded-full bg-gradient-to-r from-sage-400 to-sage-600" style="width: {{ min(100, $product->stock) }}%"></div>
+                <div class="h-full rounded-full bg-linear-to-r from-sage-400 to-sage-600" style="width: {{ min(100, $product->stock) }}%"></div>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                     @csrf
                     <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}"
                         class="w-24 rounded-2xl border border-line bg-milk-100 px-4 py-3.5 text-center font-bold outline-none focus:border-apricot-400 dark:focus:border-sage-500 dark:bg-cream-100/5 dark:border-cream-100/15" />
-                    <button class="flex-1 rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 hover:shadow-xl active:scale-[0.99] transition">🛒 Tambah ke Keranjang</button>
+                    <button class="flex-1 rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 hover:shadow-xl active:scale-[0.99] transition">🛒 Tambah ke Keranjang</button>
                 </form>
                 <p class="mt-3 text-center text-xs text-cocoa-500/70">✅ Garansi 7 hari · 💳 Bisa COD · ↩️ Retur mudah</p>
             @else
@@ -75,7 +75,7 @@
 <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
     @foreach($related as $r)
     <a href="{{ route('products.show', $r) }}" class="card-lift overflow-hidden rounded-3xl border border-line/70 bg-card hover:shadow-xl dark:bg-night-800 dark:border-cream-100/15">
-        <div class="aspect-square bg-gradient-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10 flex items-center justify-center text-4xl">🛍️</div>
+        <div class="aspect-square bg-linear-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10 flex items-center justify-center text-4xl">🛍️</div>
         <div class="p-4">
             <p class="line-clamp-1 text-sm font-bold">{{ $r->name }}</p>
             <p class="mt-1 text-sm font-extrabold text-cocoa-700 dark:text-sage-300">Rp {{ number_format($r->price, 0, ',', '.') }}</p>

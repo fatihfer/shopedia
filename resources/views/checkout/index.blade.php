@@ -25,7 +25,30 @@
                 <div class="rounded-2xl border border-apricot-400 bg-sand-200/60 p-3 dark:bg-sage-500/15 dark:border-sage-500/30"><p class="font-bold text-cocoa-700 dark:text-sage-200">⚡ Express ✓</p><p class="text-cocoa-500/70">1 hari · Gratis</p></div>
                 <div class="rounded-2xl border border-line p-3 dark:border-cream-100/15"><p class="font-bold">📦 Hemat</p><p class="text-cocoa-500/70">4-5 hari · Gratis</p></div>
             </div>
-            <button class="mt-5 w-full rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 py-4 font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 active:scale-[0.99] transition">Buat Pesanan — Rp {{ number_format($total, 0, ',', '.') }}</button>
+            <h2 class="font-extrabold flex items-center gap-2">💳 Metode Pembayaran</h2>
+            @if($methods->isEmpty())
+                <p class="mt-3 rounded-2xl bg-red-50 p-4 text-sm text-red-600 dark:bg-red-500/10 dark:text-red-300">Belum ada metode pembayaran aktif. Hubungi admin toko.</p>
+            @else
+            <div class="mt-3 space-y-2.5">
+                @foreach($methods as $method)
+                <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-line p-4 transition has-checked:border-apricot-400 has-checked:bg-sand-200/50 dark:border-cream-100/15 dark:has-checked:border-sage-500 dark:has-checked:bg-sage-500/10">
+                    <input type="radio" name="payment_method_id" value="{{ $method->id }}" @checked($loop->first) class="h-5 w-5 shrink-0 accent-[#be6a42]" required>
+                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-milk-100 text-xl dark:bg-cream-100/5">{{ $method->isQris() ? '📱' : '🏦' }}</span>
+                    <span class="min-w-0 flex-1">
+                        <span class="block font-bold">{{ $method->name }}</span>
+                        <span class="block truncate text-xs text-cocoa-500/70">
+                            @if($method->isQris())
+                                Scan QR bayar instan
+                            @else
+                                {{ $method->account_number }} a.n. {{ $method->account_name }}
+                            @endif
+                        </span>
+                    </span>
+                </label>
+                @endforeach
+            </div>
+            @endif
+            <button class="mt-5 w-full rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 py-4 font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 active:scale-[0.99] transition">Buat Pesanan — Rp {{ number_format($total, 0, ',', '.') }}</button>
             <p class="mt-2.5 text-center text-xs text-cocoa-500/70">Dengan memesan, kamu menyetujui syarat & ketentuan Shopedia.</p>
         </form>
         <div class="h-fit rounded-3xl border border-line/70 bg-card p-6 dark:bg-night-800 dark:border-cream-100/15 lg:sticky lg:top-24">

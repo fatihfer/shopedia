@@ -10,6 +10,7 @@
         <a href="{{ route('admin.products.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">📦 Produk</a>
         <a href="{{ route('admin.categories.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">📂 Kategori</a>
         <a href="{{ route('admin.orders.index') }}" class="rounded-full bg-gray-900 px-4 py-2 text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 transition">🧾 Pesanan</a>
+        <a href="{{ route('admin.payment-methods.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-milk-100 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">💳 Bayar</a>
     </div>
 </div>
 
@@ -25,7 +26,7 @@
     @endphp
     @foreach($cards as [$label, $value, $icon, $grad])
     <div class="rounded-3xl border border-line/70 bg-card p-5 dark:bg-night-800 dark:border-cream-100/15 card-lift">
-        <span class="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br {{ $grad }} text-lg text-white shadow">{{ $icon }}</span>
+        <span class="grid h-10 w-10 place-items-center rounded-2xl bg-linear-to-br {{ $grad }} text-lg text-white shadow">{{ $icon }}</span>
         <p class="mt-3 text-xs font-bold uppercase tracking-wider text-cocoa-500/70">{{ $label }}</p>
         <p class="text-lg font-black truncate">{{ $value }}</p>
     </div>

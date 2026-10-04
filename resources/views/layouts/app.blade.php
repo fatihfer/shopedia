@@ -30,7 +30,7 @@
         <div class="flex h-16 items-center justify-between gap-3">
             {{-- Logo --}}
             <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0">
-                <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 text-white font-black text-lg shadow-lg shadow-night-900/25 dark:shadow-black/50">S</span>
+                <span class="grid h-9 w-9 place-items-center rounded-xl bg-linear-to-br from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 text-white font-black text-lg shadow-lg shadow-night-900/25 dark:shadow-black/50">S</span>
                 <span class="leading-tight">
                     <span class="block font-extrabold tracking-tight text-lg">Shopedia</span>
                     <span class="hidden sm:block text-[11px] uppercase tracking-[0.2em] text-cocoa-500/70 dark:text-sage-400">Modern Store</span>
@@ -42,7 +42,7 @@
                 <div class="relative w-full">
                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-cocoa-500/70">⌕</span>
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari sneakers, kopi, skincare..."
-                        class="w-full rounded-full border border-line bg-sand-200/50 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-apricot-400 dark:focus:border-sage-500 focus:bg-card focus:ring-4 focus:ring-apricot-400/40 dark:focus:ring-sage-500/20 dark:bg-cream-100/5 dark:border-cream-100/15 dark:focus:bg-night-800 dark:focus:border-sage-500 transition" />
+                        class="w-full rounded-full border border-line bg-sand-200/50 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-apricot-400 dark:focus:border-sage-500 focus:bg-card focus:ring-4 focus:ring-apricot-400/40 dark:focus:ring-sage-500/20 dark:bg-cream-100/5 dark:border-cream-100/15 dark:focus:bg-night-800 transition" />
                 </div>
             </form>
 
@@ -63,7 +63,7 @@
                     🛒
                     @php $cartCount = array_sum(session('cart', [])); @endphp
                     @if($cartCount > 0)
-                        <span class="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-1 text-[11px] font-bold text-white shadow">{{ $cartCount }}</span>
+                        <span class="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-1 text-[11px] font-bold text-white shadow">{{ $cartCount }}</span>
                     @endif
                 </a>
 
@@ -78,7 +78,7 @@
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="rounded-full px-3.5 py-2 font-medium text-cocoa-700 hover:bg-sand-200 dark:text-cream-100/80 dark:hover:bg-cream-100/10 transition">Masuk</a>
-                    <a href="{{ route('register') }}" class="rounded-full bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-4 py-2 font-semibold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">Daftar</a>
+                    <a href="{{ route('register') }}" class="rounded-full bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-4 py-2 font-semibold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">Daftar</a>
                 @endauth
 
                 {{-- Mobile hamburger --}}
@@ -139,7 +139,7 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 py-12 grid gap-10 md:grid-cols-4">
         <div class="md:col-span-2">
             <div class="flex items-center gap-2.5">
-                <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 text-white font-black text-lg">S</span>
+                <span class="grid h-9 w-9 place-items-center rounded-xl bg-linear-to-br from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 text-white font-black text-lg">S</span>
                 <span class="font-extrabold text-lg tracking-tight">Shopedia</span>
             </div>
             <p class="mt-3 max-w-sm text-sm leading-6 text-cocoa-500 dark:text-sage-300">
