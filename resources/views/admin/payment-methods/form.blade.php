@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', ($method->exists ? 'Edit' : 'Tambah') . ' Metode Pembayaran')
 @section('content')
-<h1 class="text-center text-2xl font-black tracking-tight">{{ $method->exists ? '✏️ Edit' : '➕ Tambah' }} Metode Pembayaran</h1>
+<h1 class="flex items-center justify-center gap-2 text-2xl font-black tracking-tight"><x-icon name="card" class="h-6 w-6 text-ember-600 dark:text-sage-300" /> {{ $method->exists ? 'Edit' : 'Tambah' }} Metode Pembayaran</h1>
 <form method="POST" action="{{ $method->exists ? route('admin.payment-methods.update', $method) : route('admin.payment-methods.store') }}" enctype="multipart/form-data"
     class="mx-auto max-w-2xl space-y-4 rounded-3xl border border-line/70 bg-card p-6 sm:p-8 dark:bg-night-800 dark:border-cream-100/15">
     @csrf
@@ -15,8 +15,8 @@
         <div>
             <label class="text-sm font-bold">Tipe</label>
             <select name="type" class="mt-1.5 w-full rounded-2xl border border-line bg-milk-100 px-4 py-3 text-sm dark:bg-cream-100/5 dark:border-cream-100/15 outline-none">
-                <option value="bank_transfer" @selected(old('type', $method->type) === 'bank_transfer')>🏦 Transfer Bank</option>
-                <option value="qris" @selected(old('type', $method->type) === 'qris')>📱 QRIS</option>
+                <option value="bank_transfer" @selected(old('type', $method->type) === 'bank_transfer')>Transfer Bank</option>
+                <option value="qris" @selected(old('type', $method->type) === 'qris')>QRIS</option>
             </select>
         </div>
     </div>
@@ -46,7 +46,7 @@
         Tampilkan metode ini saat checkout
     </label>
     <div class="flex items-center gap-3 pt-1">
-        <button class="rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-7 py-3 text-sm font-bold text-white shadow-lg hover:opacity-90 transition">💾 Simpan</button>
+        <button class="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-7 py-3 text-sm font-bold text-white shadow-lg hover:opacity-90 transition"><x-icon name="check" class="h-4 w-4" /> Simpan</button>
         <a href="{{ route('admin.payment-methods.index') }}" class="text-sm text-cocoa-500/70">Batal</a>
     </div>
 </form>

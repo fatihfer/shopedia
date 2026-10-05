@@ -3,7 +3,7 @@
 @section('content')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <div class="mx-auto max-w-5xl">
-    <h1 class="text-2xl sm:text-3xl font-black tracking-tight">Checkout 💳</h1>
+    <h1 class="flex items-center gap-2.5 text-2xl sm:text-3xl font-black tracking-tight"><x-icon name="card" class="h-8 w-8 text-ember-600 dark:text-sage-300" /> Checkout</h1>
     <p class="text-sm text-cocoa-500 dark:text-sage-300">Lengkapi data penerima & pengiriman.</p>
 
     {{-- Steps --}}
@@ -20,7 +20,7 @@
             @csrf
             {{-- Penerima --}}
             <div class="rounded-3xl border border-line/70 bg-card p-6 sm:p-8 dark:bg-night-800 dark:border-cream-100/15">
-                <h2 class="font-extrabold flex items-center gap-2">👤 Data Penerima</h2>
+                <h2 class="font-extrabold flex items-center gap-2"><x-icon name="pin" class="h-5 w-5 text-ember-600 dark:text-sage-300" /> Data Penerima</h2>
                 <div class="mt-3 grid sm:grid-cols-2 gap-3">
                     <div>
                         <label class="text-sm font-bold">Nama penerima</label>
@@ -39,7 +39,7 @@
                         class="mt-1.5 w-full rounded-2xl border border-line bg-milk-100 px-4 py-3 text-sm leading-6 outline-none focus:border-apricot-400 dark:focus:border-sage-500 focus:ring-4 focus:ring-apricot-400/40 dark:focus:ring-sage-500/20 dark:bg-cream-100/5 dark:border-cream-100/15 transition">{{ old('shipping_address') }}</textarea>
                 </div>
                 <div class="mt-3">
-                    <label class="text-sm font-bold">📍 Pin lokasi <span class="font-normal text-cocoa-500/70">(opsional — klik peta untuk menandai)</span></label>
+                    <label class="flex items-center gap-1.5 text-sm font-bold"><x-icon name="pin" class="h-4 w-4" /> Pin lokasi <span class="font-normal text-cocoa-500/70">(opsional — klik peta untuk menandai)</span></label>
                     <div id="pickup-map" class="mt-1.5 h-56 w-full overflow-hidden rounded-2xl border border-line dark:border-cream-100/15 z-0"></div>
                     <p id="pickup-label" class="mt-1.5 text-xs text-cocoa-500/70">Belum ada titik dipilih.</p>
                     <input type="hidden" name="latitude" id="input-lat" value="{{ old('latitude') }}">
@@ -49,7 +49,7 @@
 
             {{-- Kurir --}}
             <div class="rounded-3xl border border-line/70 bg-card p-6 sm:p-8 dark:bg-night-800 dark:border-cream-100/15">
-                <h2 class="font-extrabold flex items-center gap-2">🚚 Kurir & Layanan</h2>
+                <h2 class="font-extrabold flex items-center gap-2"><x-icon name="truck" class="h-5 w-5 text-ember-600 dark:text-sage-300" /> Kurir & Layanan</h2>
                 <label class="mt-3 block text-sm font-bold">Kurir</label>
                 <select name="courier" id="input-courier" required
                     class="mt-1.5 w-full rounded-2xl border border-line bg-milk-100 px-4 py-3 text-sm outline-none focus:border-apricot-400 dark:focus:border-sage-500 dark:bg-cream-100/5 dark:border-cream-100/15 transition">
@@ -75,7 +75,7 @@
 
             {{-- Bayar --}}
             <div class="rounded-3xl border border-line/70 bg-card p-6 sm:p-8 dark:bg-night-800 dark:border-cream-100/15">
-                <h2 class="font-extrabold flex items-center gap-2">💳 Metode Pembayaran</h2>
+                <h2 class="font-extrabold flex items-center gap-2"><x-icon name="card" class="h-5 w-5 text-ember-600 dark:text-sage-300" /> Metode Pembayaran</h2>
                 @if($methods->isEmpty())
                     <p class="mt-3 rounded-2xl bg-red-50 p-4 text-sm text-red-600 dark:bg-red-500/10 dark:text-red-300">Belum ada metode pembayaran aktif. Hubungi admin toko.</p>
                 @else
@@ -83,7 +83,7 @@
                     @foreach($methods as $method)
                     <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-line p-4 transition has-checked:border-apricot-400 has-checked:bg-sand-200/50 dark:border-cream-100/15 dark:has-checked:border-sage-500 dark:has-checked:bg-sage-500/10">
                         <input type="radio" name="payment_method_id" value="{{ $method->id }}" @checked($loop->first) class="h-5 w-5 shrink-0 accent-[#be6a42]" required>
-                        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-milk-100 text-xl dark:bg-cream-100/5">{{ $method->isQris() ? '📱' : '🏦' }}</span>
+                        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-milk-100 dark:bg-cream-100/5"><x-icon name="{{ $method->isQris() ? 'phone' : 'bank' }}" class="h-6 w-6 text-cocoa-500 dark:text-sage-300" /></span>
                         <span class="min-w-0 flex-1">
                             <span class="block font-bold">{{ $method->name }}</span>
                             <span class="block truncate text-xs text-cocoa-500/70">

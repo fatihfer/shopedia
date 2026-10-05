@@ -21,17 +21,17 @@ $label = [
     'expired' => 'Kadaluarsa',
 ];
 @endphp
-<a href="{{ route('orders.index') }}" class="text-sm font-medium text-cocoa-500 hover:text-cocoa-700 dark:text-sage-300 transition">← Semua pesanan</a>
+<a href="{{ route('orders.index') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-cocoa-500 hover:text-cocoa-700 dark:text-sage-300 transition"><x-icon name="arrow-left" class="h-4 w-4" /> Semua pesanan</a>
 
 @if($order->rejection_reason)
 <div class="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-300">
-    ❌ Bukti pembayaran ditolak admin: <span class="font-semibold">{{ $order->rejection_reason }}</span> Silakan upload ulang bukti yang valid.
+    <span class="inline-flex items-center gap-1.5"><x-icon name="x" class="h-4 w-4" /> Bukti pembayaran ditolak admin:</span> <span class="font-semibold">{{ $order->rejection_reason }}</span> Silakan upload ulang bukti yang valid.
 </div>
 @endif
 
 @if($order->status === 'expired')
 <div class="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-300">
-    ⏰ Batas pembayaran 24 jam terlewati, pesanan otomatis dibatalkan dan stok dikembalikan. Silakan buat pesanan baru.
+    <span class="inline-flex items-center gap-1.5"><x-icon name="clock" class="h-4 w-4" /> Batas pembayaran 24 jam terlewati, pesanan otomatis dibatalkan dan stok dikembalikan.</span> Silakan buat pesanan baru.
 </div>
 @endif
 
@@ -68,7 +68,7 @@ $label = [
     <div class="space-y-6">
         @if($order->isUnpaid())
         <div class="rounded-3xl border border-line/70 bg-card p-6 dark:bg-night-800 dark:border-cream-100/15">
-            <h2 class="font-extrabold">💳 Bayar Pesanan</h2>
+            <h2 class="flex items-center gap-2 font-extrabold"><x-icon name="card" class="h-5 w-5 text-ember-600 dark:text-sage-300" /> Bayar Pesanan</h2>
             @if($order->paymentMethod)
                 @if($order->paymentMethod->isQris())
                     <p class="mt-2 text-sm text-cocoa-500">Scan QR {{ $order->paymentMethod->name }} sejumlah nominal persis:</p>
@@ -90,13 +90,13 @@ $label = [
                 <span class="font-medium">Nominal</span>
                 <span class="font-black">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
             </div>
-            <p class="mt-2 text-center text-xs {{ $order->expired_at?->isPast() ? 'text-red-500 font-bold' : 'text-cocoa-500/70' }}">
-                ⏰ Bayar sebelum {{ $order->expired_at?->format('d M Y H:i') }}
+            <p class="mt-2 flex items-center justify-center gap-1.5 text-center text-xs {{ $order->expired_at?->isPast() ? 'text-red-500 font-bold' : 'text-cocoa-500/70' }}">
+                <x-icon name="clock" class="h-4 w-4" /> Bayar sebelum {{ $order->expired_at?->format('d M Y H:i') }}
             </p>
 
             @if($order->payment_proof)
             <div class="mt-3 rounded-2xl border border-blue-200 bg-blue-50 p-3 dark:bg-blue-500/10 dark:border-blue-500/20">
-                <p class="text-xs font-bold text-blue-700 dark:text-blue-300">📤 Bukti sudah terkirim — menunggu verifikasi admin</p>
+                <p class="flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-300"><x-icon name="send" class="h-4 w-4" /> Bukti sudah terkirim — menunggu verifikasi admin</p>
                 <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank">
                     <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti terkirim" class="mt-2 h-28 rounded-xl border border-line dark:border-cream-100/15 hover:opacity-90 transition">
                 </a>
@@ -110,7 +110,7 @@ $label = [
                 <input type="file" name="proof" accept="image/*" required
                     class="mt-1.5 w-full rounded-2xl border border-line bg-milk-100 px-4 py-2.5 text-sm file:mr-3 file:rounded-xl file:border-0 file:bg-night-950 file:px-4 file:py-2 file:text-xs file:font-bold file:text-cream-100 dark:bg-cream-100/5 dark:border-cream-100/15">
                 <p class="mt-1 text-xs text-cocoa-500/70">JPG/PNG/WebP, maks 2MB.</p>
-                <button class="mt-3 w-full rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 py-3 text-sm font-bold text-white hover:opacity-90 transition">Kirim Bukti 📤</button>
+                <button class="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 py-3 text-sm font-bold text-white hover:opacity-90 transition"><x-icon name="send" class="h-4 w-4" /> Kirim Bukti</button>
             </form>
 
             <form method="POST" action="{{ route('orders.cancel', $order) }}" onsubmit="return confirm('Batalkan pesanan ini?')" class="mt-2">
@@ -120,12 +120,12 @@ $label = [
         </div>
         @elseif($order->paid_at)
         <div class="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 text-sm text-emerald-800 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-300">
-            ✅ Lunas via {{ $order->paymentMethod->name ?? '-' }} pada {{ $order->paid_at->format('d M Y H:i') }}.
+            <p class="flex items-center gap-1.5"><x-icon name="check-circle" class="h-5 w-5" /> Lunas via {{ $order->paymentMethod->name ?? '-' }} pada {{ $order->paid_at->format('d M Y H:i') }}.</p>
         </div>
         @endif
 
         <div class="h-fit rounded-3xl border border-line/70 bg-card p-6 dark:bg-night-800 dark:border-cream-100/15">
-            <h2 class="font-extrabold">📍 Pengiriman</h2>
+            <h2 class="flex items-center gap-2 font-extrabold"><x-icon name="pin" class="h-5 w-5 text-ember-600 dark:text-sage-300" /> Pengiriman</h2>
             <p class="mt-2 text-sm font-bold">{{ $order->recipient_name }} <span class="font-normal text-cocoa-500/70">({{ $order->recipient_phone }})</span></p>
             <p class="mt-1 text-sm leading-6 text-cocoa-700 dark:text-cream-100/80">{{ $order->shipping_address }}</p>
             @if($order->latitude && $order->longitude)

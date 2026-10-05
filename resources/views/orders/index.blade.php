@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Pesanan Saya - Shopedia')
 @section('content')
-<h1 class="text-2xl sm:text-3xl font-black tracking-tight">Pesanan Saya 📦</h1>
+<h1 class="flex items-center gap-2.5 text-2xl sm:text-3xl font-black tracking-tight"><x-icon name="box" class="h-8 w-8 text-ember-600 dark:text-sage-300" /> Pesanan Saya</h1>
 <p class="text-sm text-cocoa-500 dark:text-sage-300">Pantau status belanjamu di sini.</p>
 @php
 $statusStyle = [
@@ -18,7 +18,7 @@ $statusStyle = [
 @forelse($orders as $order)
     <a href="{{ route('orders.show', $order) }}" class="card-lift flex items-center justify-between gap-4 rounded-3xl border border-line/70 bg-card p-5 dark:bg-night-800 dark:border-cream-100/15">
         <div class="flex items-center gap-4 min-w-0">
-            <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-cream-100 to-sage-200 text-xl dark:from-cream-100/10 dark:to-cream-100/5">📦</span>
+            <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-cream-100 to-sage-200 dark:from-cream-100/10 dark:to-cream-100/5"><x-icon name="box" class="h-6 w-6 text-cocoa-500 dark:text-sage-300" /></span>
             <div class="min-w-0">
                 <p class="font-extrabold">#{{ $order->id }} · Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
                 <p class="text-sm text-cocoa-500 dark:text-sage-300">{{ $order->items_count }} item · {{ $order->created_at->format('d M Y H:i') }}</p>
@@ -28,9 +28,9 @@ $statusStyle = [
     </a>
 @empty
     <div class="rounded-3xl border border-dashed border-sand-300 bg-card p-14 text-center dark:bg-night-800 dark:border-cream-100/15">
-        <p class="text-5xl">📭</p>
+        <x-icon name="inbox" class="mx-auto h-14 w-14 text-sand-300 dark:text-sage-500" />
         <p class="mt-3 font-extrabold">Belum ada pesanan</p>
-        <a href="{{ route('products.index') }}" class="mt-4 inline-block rounded-2xl bg-gray-900 px-6 py-3 text-sm font-bold text-white dark:bg-cream-100 dark:text-night-950">Belanja dulu →</a>
+        <a href="{{ route('products.index') }}" class="mt-4 inline-flex items-center gap-2 rounded-2xl bg-gray-900 px-6 py-3 text-sm font-bold text-white dark:bg-cream-100 dark:text-night-950">Belanja dulu <x-icon name="arrow-right" class="h-4 w-4" /></a>
     </div>
 @endforelse
 </div>

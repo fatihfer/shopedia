@@ -21,7 +21,7 @@
 
 {{-- Announcement bar --}}
 <div class="bg-petal-200 text-cocoa-900 dark:bg-night-800 dark:text-cream-100 dark:border-b dark:border-cream-100/10 text-center text-xs sm:text-sm py-2 px-4">
-    🚚 Gratis ongkir untuk pembelian pertama &nbsp;·&nbsp; Gunakan kode <span class="font-bold tracking-wide text-ember-600 dark:text-sage-300">HEMAT10</span>
+    <span class="inline-flex items-center gap-1.5"><x-icon name="truck" class="h-4 w-4" /> Gratis ongkir untuk pembelian pertama</span> &nbsp;·&nbsp; Gunakan kode <span class="font-bold tracking-wide text-ember-600 dark:text-sage-300">HEMAT10</span>
 </div>
 
 {{-- Navbar --}}
@@ -40,7 +40,7 @@
             {{-- Search (desktop) --}}
             <form method="GET" action="{{ route('products.index') }}" class="hidden md:flex flex-1 max-w-md items-center">
                 <div class="relative w-full">
-                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-cocoa-500/70">⌕</span>
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-cocoa-500/70"><x-icon name="search" class="h-4 w-4" /></span>
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari sneakers, kopi, skincare..."
                         class="w-full rounded-full border border-line bg-sand-200/50 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-apricot-400 dark:focus:border-sage-500 focus:bg-card focus:ring-4 focus:ring-apricot-400/40 dark:focus:ring-sage-500/20 dark:bg-cream-100/5 dark:border-cream-100/15 dark:focus:bg-night-800 transition" />
                 </div>
@@ -53,14 +53,14 @@
                 {{-- Dark toggle --}}
                 <button type="button" data-theme-toggle data-theme-icon aria-label="Mode gelap"
                     class="grid h-10 w-10 place-items-center rounded-full border border-line text-lg hover:bg-sand-200 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">
-                    <span data-icon-moon>🌙</span>
-                    <span data-icon-sun class="hidden">☀️</span>
+                    <span data-icon-moon><x-icon name="moon" class="h-5 w-5" /></span>
+                    <span data-icon-sun class="hidden"><x-icon name="sun" class="h-5 w-5" /></span>
                 </button>
 
                 {{-- Cart --}}
                 <a href="{{ route('cart.index') }}"
                    class="relative grid h-10 w-10 place-items-center rounded-full border border-line hover:bg-sand-200 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition" title="Keranjang">
-                    🛒
+                    <x-icon name="cart" class="h-5 w-5" />
                     @php $cartCount = array_sum(session('cart', [])); @endphp
                     @if($cartCount > 0)
                         <span class="absolute -top-1 -right-1 grid h-5 min-w-5 place-items-center rounded-full bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-1 text-[11px] font-bold text-white shadow">{{ $cartCount }}</span>
@@ -70,7 +70,7 @@
                 @auth
                     <a href="{{ route('orders.index') }}" class="hidden lg:inline-flex rounded-full px-3.5 py-2 font-medium text-cocoa-700 hover:bg-sand-200 dark:text-cream-100/80 dark:hover:bg-cream-100/10 transition">Pesanan</a>
                     @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex rounded-full bg-gray-900 px-4 py-2 font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition">Admin ✨</a>
+                        <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-4 py-2 font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition"><x-icon name="sparkles" class="h-4 w-4" /> Admin</a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="hidden sm:inline">
                         @csrf
@@ -82,7 +82,7 @@
                 @endauth
 
                 {{-- Mobile hamburger --}}
-                <button type="button" data-menu-toggle class="sm:hidden grid h-10 w-10 place-items-center rounded-full border border-line dark:border-cream-100/15" aria-label="Menu">☰</button>
+                <button type="button" data-menu-toggle class="sm:hidden grid h-10 w-10 place-items-center rounded-full border border-line dark:border-cream-100/15" aria-label="Menu"><x-icon name="menu" class="h-5 w-5" /></button>
             </nav>
         </div>
 
@@ -97,7 +97,7 @@
             @auth
                 <a href="{{ route('orders.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-sand-200 dark:hover:bg-cream-100/10">Pesanan Saya</a>
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="block rounded-xl px-4 py-2.5 font-semibold text-cocoa-700 dark:text-sage-300">Admin Dashboard ✨</a>
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 rounded-xl px-4 py-2.5 font-semibold text-cocoa-700 dark:text-sage-300"><x-icon name="sparkles" class="h-4 w-4" /> Admin Dashboard</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">@csrf<button class="w-full text-left rounded-xl px-4 py-2.5 text-red-500">Keluar ({{ auth()->user()->name }})</button></form>
             @else
@@ -112,14 +112,14 @@
 <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 pt-4 space-y-2">
     @if(session('success'))
         <div class="toast flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-300">
-            <span class="text-base">✅</span><span class="flex-1">{{ session('success') }}</span>
-            <button data-toast-close class="opacity-60 hover:opacity-100">✕</button>
+            <span class="text-emerald-500"><x-icon name="check-circle" class="h-5 w-5" /></span><span class="flex-1">{{ session('success') }}</span>
+            <button data-toast-close class="opacity-60 hover:opacity-100"><x-icon name="x" class="h-4 w-4" /></button>
         </div>
     @endif
     @if(session('error'))
         <div class="toast flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-300">
-            <span class="text-base">⚠️</span><span class="flex-1">{{ session('error') }}</span>
-            <button data-toast-close class="opacity-60 hover:opacity-100">✕</button>
+            <span class="text-amber-500"><x-icon name="alert" class="h-5 w-5" /></span><span class="flex-1">{{ session('error') }}</span>
+            <button data-toast-close class="opacity-60 hover:opacity-100"><x-icon name="x" class="h-4 w-4" /></button>
         </div>
     @endif
     @if($errors->any())
@@ -151,11 +151,11 @@
                 <span class="font-extrabold text-lg tracking-tight">Shopedia</span>
             </div>
             <p class="mt-3 max-w-sm text-sm leading-6 text-cocoa-500 dark:text-sage-300">
-                Toko online modern berbasis Laravel — katalog cepat, keranjang instan, checkout aman, dan panel admin yang rapi. Dengan dukungan dark mode otomatis. 🌗
+                Toko online modern berbasis Laravel — katalog cepat, keranjang instan, checkout aman, dan panel admin yang rapi.
             </p>
             <div class="mt-4 flex gap-2">
-                <button data-theme-toggle class="rounded-full border border-line px-4 py-2 text-xs font-medium hover:bg-sand-200 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">🌗 Ganti tema</button>
-                <a href="{{ route('products.index') }}" class="rounded-full bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 transition">Mulai belanja →</a>
+                <button data-theme-toggle class="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-xs font-medium hover:bg-sand-200 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition"><x-icon name="theme" class="h-4 w-4" /> Ganti tema</button>
+                <a href="{{ route('products.index') }}" class="inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 transition">Mulai belanja <x-icon name="arrow-right" class="h-3.5 w-3.5" /></a>
             </div>
         </div>
         <div>
@@ -165,7 +165,7 @@
                 <li><a href="{{ route('cart.index') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Keranjang</a></li>
                 <li><a href="{{ route('checkout.index') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Checkout</a></li>
                 <li><a href="{{ route('orders.index') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Lacak pesanan</a></li>
-                <li><a href="{{ route('contact') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Hubungi Kami 💬</a></li>
+                <li><a href="{{ route('contact') }}" class="inline-flex items-center gap-1.5 text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80"><x-icon name="chat" class="h-4 w-4" /> Hubungi Kami</a></li>
             </ul>
         </div>
         <div>
@@ -175,7 +175,7 @@
                     <li><a href="{{ route('login') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Masuk</a></li>
                     <li><a href="{{ route('register') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Daftar</a></li>
                 @else
-                    <li class="text-cocoa-500 dark:text-sage-300">Halo, {{ auth()->user()->name }} 👋</li>
+                    <li class="text-cocoa-500 dark:text-sage-300">Halo, {{ auth()->user()->name }}</li>
                     @if(auth()->user()->isAdmin())
                         <li><a href="{{ route('admin.dashboard') }}" class="text-cocoa-700 dark:text-sage-300 font-medium">Admin dashboard</a></li>
                     @endif
@@ -185,7 +185,7 @@
         </div>
     </div>
     <div class="border-t border-line/60 dark:border-cream-100/10 py-5 text-center text-xs text-cocoa-500/70">
-        © {{ date('Y') }} Shopedia — dibuat dengan Laravel + Tailwind CSS 💜
+        © {{ date('Y') }} Shopedia — dibuat dengan Laravel + Tailwind CSS
     </div>
 </footer>
 </body>

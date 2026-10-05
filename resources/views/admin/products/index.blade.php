@@ -3,7 +3,7 @@
 @section('content')
 <div class="flex flex-wrap items-center justify-between gap-3">
     <h1 class="text-2xl font-black tracking-tight">Produk <span class="text-sm font-medium text-cocoa-500/70">({{ $products->total() }})</span></h1>
-    <a href="{{ route('admin.products.create') }}" class="rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">+ Tambah Produk</a>
+    <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-1.5 rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition"><x-icon name="plus" class="h-4 w-4" /> Tambah Produk</a>
 </div>
 <div class="mt-5 overflow-hidden rounded-3xl border border-line/70 bg-card dark:bg-night-800 dark:border-cream-100/15">
     <div class="overflow-x-auto">
@@ -17,11 +17,11 @@
             <td class="px-4 py-3.5 font-bold whitespace-nowrap">Rp {{ number_format($p->price, 0, ',', '.') }}</td>
             <td class="px-4 py-3.5"><span class="font-bold {{ $p->stock < 5 ? 'text-red-500' : '' }}">{{ $p->stock }}</span></td>
             <td class="px-4 py-3.5 text-right whitespace-nowrap">
-                <a href="{{ route('products.show', $p) }}" class="text-cocoa-500/70 hover:text-cocoa-700 text-xs">Lihat</a>
-                <a href="{{ route('admin.products.edit', $p) }}" class="ml-2 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-blue-600 dark:bg-blue-500/10 dark:text-blue-300">Edit</a>
+                <a href="{{ route('products.show', $p) }}" class="inline-flex items-center gap-1 text-cocoa-500/70 hover:text-cocoa-700 text-xs"><x-icon name="eye" class="h-4 w-4" /> Lihat</a>
+                <a href="{{ route('admin.products.edit', $p) }}" class="ml-2 inline-flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-blue-600 dark:bg-blue-500/10 dark:text-blue-300"><x-icon name="pencil" class="h-3.5 w-3.5" /> Edit</a>
                 <form method="POST" action="{{ route('admin.products.destroy', $p) }}" class="inline" onsubmit="return confirm('Hapus produk ini?')">
                     @csrf @method('DELETE')
-                    <button class="ml-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 dark:bg-red-500/10">Hapus</button>
+                    <button class="ml-1 inline-flex items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-500 dark:bg-red-500/10"><x-icon name="trash" class="h-3.5 w-3.5" /> Hapus</button>
                 </form>
             </td>
         </tr>
