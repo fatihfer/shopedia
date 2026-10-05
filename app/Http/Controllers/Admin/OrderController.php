@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\NotificationLog;
 use App\Models\Order;
+use App\Support\WhatsApp;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,9 +31,33 @@ class OrderController extends Controller
 
     public function show(Order $order): View
     {
-        $order->load(['items.product', 'user', 'paymentMethod']);
+        $order->load(['items.product', 'user', 'paymentMethod', 'notificationLogs.sender']);
 
         return view('admin.orders.show', compact('order'));
+    }
+
+    /** Catat pengiriman struk lalu arahkan admin ke WA customer. */
+    public function notify(Request $request, Order $order): RedirectResponse
+    {
+        abort_unless($order->paid_at, 400, 'Struk hanya bisa dikirim untuk pesanan yang sudah lunas.');
+
+        $order->loadMissing(['items.product', 'paymentMethod']);
+
+        $phone = WhatsApp::normalizePhone($order->recipient_phone);
+        abort_unless($phone, 400, 'Nomor HP penerima tidak valid.');
+
+        $message = WhatsApp::receiptMessage($order);
+
+        NotificationLog::create([
+            'order_id' => $order->id,
+            'sent_by' => $request->user()->id,
+            'channel' => 'whatsapp',
+            'recipient' => $phone,
+            'message' => $message,
+            'status' => 'opened',
+        ]);
+
+        return redirect()->away(WhatsApp::waMeUrl($phone, $message));
     }
 
     public function update(Request $request, Order $order): RedirectResponse

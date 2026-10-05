@@ -13,7 +13,7 @@ use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
-    public function index(): View|RedirectResponse
+    public function index(Request $request): View|RedirectResponse
     {
         $cart = session()->get('cart', []);
 
@@ -28,20 +28,42 @@ class CheckoutController extends Controller
             'subtotal' => $p->price * $cart[$p->id],
         ]);
         $total = $items->sum('subtotal');
-        $methods = PaymentMethod::where('is_active', true)->orderBy('name')->get();
 
-        return view('checkout.index', compact('items', 'total', 'methods'));
+        $methods = PaymentMethod::where('is_active', true)->orderBy('name')->get();
+        $couriers = config('shipping.couriers');
+        $services = config('shipping.services');
+        $map = config('shipping.map_default');
+
+        return view('checkout.index', compact('items', 'total', 'methods', 'couriers', 'services', 'map'));
     }
 
     public function store(Request $request): RedirectResponse
     {
+        $couriers = array_keys(config('shipping.couriers'));
+        $services = config('shipping.services');
+
         $validated = $request->validate([
+            'recipient_name' => ['required', 'string', 'max:100'],
+            'recipient_phone' => ['required', 'string', 'max:20', 'regex:/^(\+62|62|0)8\d{7,11}$/'],
             'shipping_address' => ['required', 'string', 'min:10', 'max:500'],
+            'courier' => ['required', Rule::in($couriers)],
+            'shipping_service' => ['required', Rule::in(array_keys($services))],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'payment_method_id' => [
                 'required',
                 Rule::exists('payment_methods', 'id')->where('is_active', true),
             ],
         ]);
+
+        // Layanan harus tersedia untuk kurir yang dipilih (ongkir diambil server-side).
+        $service = $services[$validated['shipping_service']];
+        if (! in_array($validated['courier'], $service['couriers'], true)) {
+            return back()
+                ->withErrors(['shipping_service' => 'Layanan tidak tersedia untuk kurir tersebut.'])
+                ->withInput();
+        }
+        $shippingCost = $service['cost'];
 
         $cart = session()->get('cart', []);
 
@@ -49,10 +71,10 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong.');
         }
 
-        return DB::transaction(function () use ($cart, $validated, $request) {
+        return DB::transaction(function () use ($cart, $validated, $shippingCost, $request) {
             $products = Product::whereIn('id', array_keys($cart))->lockForUpdate()->get()->keyBy('id');
 
-            $total = 0;
+            $itemsTotal = 0;
             foreach ($cart as $productId => $qty) {
                 $product = $products->get($productId);
                 if (! $product) {
@@ -61,16 +83,23 @@ class CheckoutController extends Controller
                 if ($product->stock < $qty) {
                     throw new \Exception("Stok {$product->name} tidak cukup. Sisa {$product->stock}.");
                 }
-                $total += $product->price * $qty;
+                $itemsTotal += $product->price * $qty;
             }
 
             /** @var Order $order */
             $order = Order::create([
                 'user_id' => $request->user()->id,
                 'payment_method_id' => $validated['payment_method_id'],
-                'total_price' => $total,
+                'total_price' => $itemsTotal + $shippingCost,
                 'status' => 'awaiting_payment',
+                'recipient_name' => $validated['recipient_name'],
+                'recipient_phone' => $validated['recipient_phone'],
                 'shipping_address' => $validated['shipping_address'],
+                'courier' => $validated['courier'],
+                'shipping_service' => $validated['shipping_service'],
+                'shipping_cost' => $shippingCost,
+                'latitude' => $validated['latitude'] ?? null,
+                'longitude' => $validated['longitude'] ?? null,
                 'expired_at' => now()->addHours(Order::EXPIRY_HOURS),
             ]);
 
@@ -91,7 +120,7 @@ class CheckoutController extends Controller
 
             session()->forget('cart');
 
-            return redirect()->route('orders.show', $order)->with('success', 'Pesanan berhasil dibuat!');
+            return redirect()->route('orders.show', $order)->with('success', 'Pesanan berhasil dibuat! Lanjutkan ke pembayaran.');
         });
     }
 }

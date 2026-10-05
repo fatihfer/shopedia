@@ -45,15 +45,22 @@ class EcommerceTest extends TestCase
         $method = PaymentMethod::where('slug', 'bca')->first();
         $this->assertNotNull($method);
 
-        $this->get(route('checkout.index'))->assertOk()->assertSee('BCA');
+        $this->get(route('checkout.index'))->assertOk()->assertSee('BCA')->assertSee('Data Penerima');
         $this->post(route('checkout.store'), [
+            'recipient_name' => 'Budi Santoso',
+            'recipient_phone' => '08123456789',
             'shipping_address' => 'Jl. Test No. 123, Jakarta 12345, HP 0812',
+            'courier' => 'jne',
+            'shipping_service' => 'reguler',
             'payment_method_id' => $method->id,
         ])->assertRedirect();
 
         $this->assertDatabaseHas('orders', ['user_id' => $customer->id]);
         $order = $customer->orders()->latest()->first();
-        $this->assertEquals(2 * (float) $product->price, (float) $order->total_price);
+        $expectedTotal = 2 * (float) $product->price + 10000;
+        $this->assertEquals($expectedTotal, (float) $order->total_price);
+        $this->assertEquals(10000.0, (float) $order->shipping_cost);
+        $this->assertEquals('Budi Santoso', $order->recipient_name);
         $this->assertEquals($stockBefore - 2, $product->fresh()->stock);
         $this->assertEquals('awaiting_payment', $order->status);
         $this->assertNotNull($order->expired_at);

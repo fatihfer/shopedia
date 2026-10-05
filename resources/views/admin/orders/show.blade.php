@@ -18,7 +18,15 @@
             @endforeach
         </div>
         <p class="mt-4 flex justify-between font-black text-lg"><span>Total</span><span class="text-gradient">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span></p>
-        <p class="mt-4 text-sm rounded-2xl bg-milk-100 p-4 dark:bg-cream-100/5"><span class="font-bold">📍 Alamat:</span> {{ $order->shipping_address }}</p>
+        <p class="mt-4 text-sm rounded-2xl bg-milk-100 p-4 dark:bg-cream-100/5">
+            <span class="font-bold">📍 {{ $order->recipient_name }} ({{ $order->recipient_phone }}):</span> {{ $order->shipping_address }}
+            @if($order->courier)
+            <br><span class="font-bold">🚚</span> {{ config('shipping.couriers.' . $order->courier, $order->courier) }} · {{ config('shipping.services.' . $order->shipping_service . '.label', $order->shipping_service) }} (Rp {{ number_format($order->shipping_cost, 0, ',', '.') }})
+            @endif
+            @if($order->latitude && $order->longitude)
+            <br><a href="https://www.openstreetmap.org/?mlat={{ $order->latitude }}&mlon={{ $order->longitude }}#map=16/{{ $order->latitude }}/{{ $order->longitude }}" target="_blank" class="font-bold underline">📌 Pin lokasi</a>
+            @endif
+        </p>
 
         @if($order->payment_proof)
         <h2 class="mt-6 font-extrabold">🧾 Bukti Pembayaran</h2>
@@ -27,6 +35,24 @@
         </a>
         @if($order->rejection_reason)
         <p class="mt-2 text-sm text-red-500">Alasan tolak sebelumnya: {{ $order->rejection_reason }}</p>
+        @endif
+        @endif
+
+        @if($order->paid_at)
+        <h2 class="mt-6 font-extrabold">💬 Struk WhatsApp</h2>
+        <form method="POST" action="{{ route('admin.orders.notify', $order) }}" target="_blank" class="mt-2">
+            @csrf
+            <button class="w-full rounded-2xl bg-emerald-600 py-3 text-sm font-bold text-white hover:bg-emerald-700 transition">📲 Kirim Struk via WA ({{ $order->recipient_phone }})</button>
+        </form>
+        @if($order->notificationLogs->isNotEmpty())
+        <div class="mt-3 space-y-2 text-xs">
+            @foreach($order->notificationLogs as $log)
+            <div class="rounded-xl bg-milk-100 p-3 dark:bg-cream-100/5">
+                <p class="font-bold">ke {{ $log->recipient }} · {{ $log->created_at->format('d M Y H:i') }} · oleh {{ $log->sender->name ?? '-' }}</p>
+                <p class="mt-1 whitespace-pre-line text-cocoa-500/80">{{ $log->message }}</p>
+            </div>
+            @endforeach
+        </div>
         @endif
         @endif
     </div>

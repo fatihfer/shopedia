@@ -94,6 +94,16 @@ $label = [
                 ⏰ Bayar sebelum {{ $order->expired_at?->format('d M Y H:i') }}
             </p>
 
+            @if($order->payment_proof)
+            <div class="mt-3 rounded-2xl border border-blue-200 bg-blue-50 p-3 dark:bg-blue-500/10 dark:border-blue-500/20">
+                <p class="text-xs font-bold text-blue-700 dark:text-blue-300">📤 Bukti sudah terkirim — menunggu verifikasi admin</p>
+                <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank">
+                    <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti terkirim" class="mt-2 h-28 rounded-xl border border-line dark:border-cream-100/15 hover:opacity-90 transition">
+                </a>
+                <p class="mt-1 text-[11px] text-cocoa-500/70">Klik gambar untuk perbesar. Upload ulang di bawah untuk mengganti (bukti lama terhapus).</p>
+            </div>
+            @endif
+
             <form method="POST" action="{{ route('orders.proof', $order) }}" enctype="multipart/form-data" class="mt-4">
                 @csrf
                 <label class="text-sm font-bold">{{ $order->status === 'awaiting_verification' ? 'Ganti bukti pembayaran' : 'Upload bukti pembayaran' }}</label>
@@ -116,8 +126,17 @@ $label = [
 
         <div class="h-fit rounded-3xl border border-line/70 bg-card p-6 dark:bg-night-800 dark:border-cream-100/15">
             <h2 class="font-extrabold">📍 Pengiriman</h2>
-            <p class="mt-2 text-sm leading-6 text-cocoa-700 dark:text-cream-100/80">{{ $order->shipping_address }}</p>
-            <p class="mt-3 text-xs text-cocoa-500/70">Pemesan: {{ $order->user->name }} ({{ $order->user->email }})</p>
+            <p class="mt-2 text-sm font-bold">{{ $order->recipient_name }} <span class="font-normal text-cocoa-500/70">({{ $order->recipient_phone }})</span></p>
+            <p class="mt-1 text-sm leading-6 text-cocoa-700 dark:text-cream-100/80">{{ $order->shipping_address }}</p>
+            @if($order->latitude && $order->longitude)
+            <a href="https://www.openstreetmap.org/?mlat={{ $order->latitude }}&mlon={{ $order->longitude }}#map=16/{{ $order->latitude }}/{{ $order->longitude }}" target="_blank" class="mt-2 inline-block text-xs font-bold text-cocoa-700 underline dark:text-sage-300">📌 Lihat pin lokasi di peta</a>
+            @endif
+            @if($order->courier)
+            <div class="mt-3 space-y-1 border-t border-dashed border-line pt-3 text-sm dark:border-cream-100/15">
+                <div class="flex justify-between"><span class="text-cocoa-500/70">Kurir</span><span class="font-bold">{{ config('shipping.couriers.' . $order->courier, $order->courier) }} · {{ config('shipping.services.' . $order->shipping_service . '.label', $order->shipping_service) }}</span></div>
+                <div class="flex justify-between"><span class="text-cocoa-500/70">Ongkir</span><span class="font-bold">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span></div>
+            </div>
+            @endif
         </div>
     </div>
 </div>

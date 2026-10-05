@@ -9,8 +9,8 @@
     <div class="flex gap-2 text-sm font-medium">
         <a href="{{ route('admin.products.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">📦 Produk</a>
         <a href="{{ route('admin.categories.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">📂 Kategori</a>
-        <a href="{{ route('admin.orders.index') }}" class="rounded-full bg-gray-900 px-4 py-2 text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 transition">🧾 Pesanan</a>
-        <a href="{{ route('admin.payment-methods.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-milk-100 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">💳 Bayar</a>
+        <a href="{{ route('admin.orders.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">🧾 Pesanan</a>
+        <a href="{{ route('admin.payment-methods.index') }}" class="rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">💳 Bayar</a>
     </div>
 </div>
 

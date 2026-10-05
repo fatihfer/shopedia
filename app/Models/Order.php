@@ -16,7 +16,14 @@ class Order extends Model
         'payment_method_id',
         'total_price',
         'status',
+        'recipient_name',
+        'recipient_phone',
         'shipping_address',
+        'courier',
+        'shipping_service',
+        'shipping_cost',
+        'latitude',
+        'longitude',
         'payment_proof',
         'paid_at',
         'expired_at',
@@ -27,6 +34,7 @@ class Order extends Model
     {
         return [
             'total_price' => 'decimal:2',
+            'shipping_cost' => 'decimal:2',
             'paid_at' => 'datetime',
             'expired_at' => 'datetime',
         ];
@@ -45,6 +53,11 @@ class Order extends Model
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function notificationLogs()
+    {
+        return $this->hasMany(NotificationLog::class)->latest();
     }
 
     public function isUnpaid(): bool

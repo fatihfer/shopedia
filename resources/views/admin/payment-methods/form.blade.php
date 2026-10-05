@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('title', ($method->exists ? 'Edit' : 'Tambah') . ' Metode Pembayaran')
 @section('content')
-<h1 class="text-2xl font-black tracking-tight">{{ $method->exists ? '✏️ Edit' : '➕ Tambah' }} Metode Pembayaran</h1>
+<h1 class="text-center text-2xl font-black tracking-tight">{{ $method->exists ? '✏️ Edit' : '➕ Tambah' }} Metode Pembayaran</h1>
 <form method="POST" action="{{ $method->exists ? route('admin.payment-methods.update', $method) : route('admin.payment-methods.store') }}" enctype="multipart/form-data"
-    class="mt-5 max-w-2xl space-y-4 rounded-3xl border border-line/70 bg-card p-6 sm:p-8 dark:bg-night-800 dark:border-cream-100/15">
+    class="mx-auto max-w-2xl space-y-4 rounded-3xl border border-line/70 bg-card p-6 sm:p-8 dark:bg-night-800 dark:border-cream-100/15">
     @csrf
     @if($method->exists) @method('PUT') @endif
     <div class="grid sm:grid-cols-2 gap-4">

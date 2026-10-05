@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 // Storefront
 Route::get('/', [ProductController::class, 'index'])->name('home');
+Route::get('/kontak', fn () => view('contact'))->name('contact');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
@@ -60,6 +61,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
+    Route::post('orders/{order}/notify', [AdminOrderController::class, 'notify'])->name('orders.notify');
 
     Route::resource('payment-methods', AdminPaymentMethodController::class)->except(['show']);
 });
