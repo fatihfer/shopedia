@@ -2,33 +2,122 @@
 @section('title', 'Katalog Produk - Shopedia')
 @section('content')
 
-{{-- Hero --}}
+{{-- Hero (disembunyikan saat search/filter) --}}
+@if($showHero)
 <div class="relative overflow-hidden rounded-3xl bg-linear-to-br from-petal-200 via-milk-100 to-sand-200 text-cocoa-900 p-8 sm:p-12 shadow-xl shadow-apricot-400/20 dark:from-night-950 dark:via-night-800 dark:to-sage-600 dark:text-cream-100 dark:shadow-black/60 dark:border dark:border-cream-100/10">
     <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-white/50 blur-2xl dark:bg-sage-300/20"></div>
     <div class="absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-apricot-400/30 blur-2xl dark:bg-black/30"></div>
     {{-- pita peach ala palet --}}
     <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-apricot-400/80 dark:bg-cream-100/90"></div>
-    <div class="relative w-full">
-        <p class="inline-flex items-center gap-2 rounded-full bg-white/60 px-3.5 py-1.5 text-xs font-semibold tracking-wide backdrop-blur dark:bg-cream-100/10"><x-icon name="sparkles" class="h-4 w-4 text-ember-600 dark:text-sage-300" /> Koleksi terbaru 2026</p>
-        <h1 class="mt-4 text-3xl sm:text-5xl font-black tracking-tight leading-[1.05]">Belanja apa hari ini? <span class="text-ember-600 dark:text-cream-200">Semua ada.</span></h1>
-        <p class="mt-3 text-cocoa-700/80 text-sm sm:text-base leading-6 dark:text-cream-100/70">Katalog modern dengan pencarian cepat, filter kategori, dan mode gelap yang nyaman di mata.</p>
-        {{-- <form method="GET" action="{{ route('products.index') }}" class="mt-6 flex flex-col sm:flex-row gap-2.5">
-            <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari sneakers, kopi, skincare..."
-                class="flex-1 rounded-2xl border-0 bg-card dark:bg-cream-100 px-5 py-3.5 text-sm text-cocoa-900 placeholder:text-cocoa-500/60 outline-none focus:ring-4 focus:ring-apricot-400/40" />
-            <button class="rounded-2xl bg-night-950 px-6 py-3.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition">Cari</button>
-        </form> --}}
-    </div>
-    <div class="relative mt-6 flex flex-wrap gap-2 text-xs">
-        <span class="text-cocoa-500 font-medium py-2 dark:text-cream-100/60">Populer:</span>
-        @foreach($categories->take(5) as $cat)
-            <a href="{{ route('products.index', ['category' => $cat->slug]) }}"
-               class="rounded-full bg-white/50 px-3.5 py-2 font-medium text-cocoa-700 backdrop-blur hover:bg-night-950 hover:text-cream-100 dark:bg-cream-100/10 dark:text-cream-100 dark:hover:bg-cream-100 dark:hover:text-night-950 transition">{{ $cat->name }}</a>
-        @endforeach
+    <div class="relative grid items-center gap-10 lg:grid-cols-2">
+        <div>
+            <p class="inline-flex items-center gap-2 rounded-full bg-white/60 px-3.5 py-1.5 text-xs font-semibold tracking-wide backdrop-blur dark:bg-cream-100/10"><x-icon name="truck" class="h-4 w-4 text-ember-600 dark:text-sage-300" /> Gratis ongkir pembelian pertama</p>
+            <h1 class="mt-4 text-4xl sm:text-5xl font-black tracking-tight leading-[1.05]">Satu toko untuk semua <span class="text-ember-600 dark:text-cream-200">kebutuhanmu.</span></h1>
+            <p class="mt-3 max-w-lg text-sm sm:text-base leading-6 text-cocoa-700/80 dark:text-cream-100/70">Sneakers, skincare, kopi, elektronik sampai fashion — 100% original dan dikirim cepat ke seluruh Indonesia.</p>
+            <div class="mt-6 flex flex-wrap gap-2.5">
+                <a href="#katalog" class="inline-flex items-center gap-2 rounded-2xl bg-night-950 px-6 py-3.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition">Mulai belanja <x-icon name="arrow-right" class="h-4 w-4" /></a>
+                <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 rounded-2xl border border-cocoa-900/15 bg-white/50 px-6 py-3.5 text-sm font-bold backdrop-blur hover:bg-white/80 dark:border-cream-100/20 dark:bg-cream-100/10 dark:hover:bg-cream-100/20 transition"><x-icon name="chat" class="h-4 w-4" /> Tanya dulu</a>
+            </div>
+            <dl class="mt-8 flex gap-8">
+                <div><dt class="text-2xl font-black tabular-nums">{{ $stats['products'] }}+</dt><dd class="text-xs font-medium text-cocoa-500 dark:text-cream-100/60">Produk original</dd></div>
+                <div class="border-l border-cocoa-900/10 pl-8 dark:border-cream-100/15"><dt class="text-2xl font-black tabular-nums">{{ $stats['categories'] }}</dt><dd class="text-xs font-medium text-cocoa-500 dark:text-cream-100/60">Kategori</dd></div>
+                <div class="border-l border-cocoa-900/10 pl-8 dark:border-cream-100/15"><dt class="flex items-center gap-1 text-2xl font-black tabular-nums">4.9 <x-icon name="star" class="h-5 w-5 text-amber-500" /></dt><dd class="text-xs font-medium text-cocoa-500 dark:text-cream-100/60">Rating pembeli</dd></div>
+            </dl>
+        </div>
+
+        @if($featured->count() >= 2)
+        <div class="relative hidden lg:block" aria-hidden="true">
+            @foreach($featured->take(2) as $i => $spot)
+            <a href="{{ route('products.show', $spot) }}" class="card-lift pointer-events-auto absolute w-64 overflow-hidden rounded-3xl border bg-card shadow-2xl dark:bg-night-800 dark:border-cream-100/15 {{ $i === 0 ? 'right-16 top-0 rotate-[-4deg]' : 'bottom-0 right-0 rotate-[3deg]' }}">
+                <div class="flex h-32 items-center justify-center bg-linear-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10">
+                    @if($spot->image_path)
+                        <img src="{{ asset('storage/' . $spot->image_path) }}" alt="" class="h-full w-full object-cover">
+                    @else
+                        <x-icon name="bag" class="h-12 w-12 text-cocoa-500/40 dark:text-sage-400/50" />
+                    @endif
+                </div>
+                <div class="p-4">
+                    <p class="line-clamp-1 text-sm font-bold">{{ $spot->name }}</p>
+                    <p class="mt-0.5 text-sm font-extrabold text-ember-600 dark:text-cream-200">Rp {{ number_format($spot->price, 0, ',', '.') }}</p>
+                </div>
+            </a>
+            @endforeach
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 -rotate-6 rounded-2xl bg-night-950 px-4 py-3 text-cream-100 shadow-xl dark:bg-cream-100 dark:text-night-950">
+                <p class="flex items-center gap-1.5 text-xs font-black"><x-icon name="shield" class="h-4 w-4" /> 100% ORIGINAL</p>
+            </div>
+            <div class="h-80"></div>
+        </div>
+        @endif
     </div>
 </div>
+@endif
+
+@if($isBrowsing)
+{{-- Kategori --}}
+<div class="mt-12">
+    <h2 class="text-xl font-extrabold tracking-tight">Belanja per kategori</h2>
+    <p class="text-sm text-cocoa-500 dark:text-sage-300">Langsung ke rak yang kamu cari.</p>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
+    @foreach($categories as $cat)
+    <a href="{{ route('products.index', ['category' => $cat->slug]) }}" class="card-lift group flex items-center gap-3 rounded-2xl border border-line/70 bg-card p-4 dark:bg-night-800 dark:border-cream-100/15">
+        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-linear-to-br from-petal-200 to-sand-200 text-lg font-black text-cocoa-900 dark:from-sage-600 dark:to-night-800 dark:text-cream-100">{{ mb_substr($cat->name, 0, 1) }}</span>
+        <span class="min-w-0">
+            <span class="block truncate text-sm font-bold group-hover:text-cocoa-700 dark:group-hover:text-sage-200">{{ $cat->name }}</span>
+            <span class="block text-xs text-cocoa-500/70">{{ $cat->products_count }} produk</span>
+        </span>
+    </a>
+    @endforeach
+</div>
+
+{{-- Produk pilihan --}}
+<div class="mt-12 flex items-end justify-between">
+    <div>
+        <h2 class="text-xl font-extrabold tracking-tight">Paling diburu minggu ini</h2>
+        <p class="text-sm text-cocoa-500 dark:text-sage-300">Pilihan acak yang stoknya masih aman.</p>
+    </div>
+    <a href="#katalog" class="inline-flex items-center gap-1 text-sm font-semibold text-cocoa-700 dark:text-sage-300 hover:underline">Semua produk <x-icon name="arrow-right" class="h-4 w-4" /></a>
+</div>
+<div class="mt-4 flex gap-5 overflow-x-auto pb-4 snap-x">
+    @foreach($featured as $fav)
+    <a href="{{ route('products.show', $fav) }}" class="card-lift w-52 shrink-0 snap-start overflow-hidden rounded-3xl border border-line/70 bg-card hover:shadow-xl dark:bg-night-800 dark:border-cream-100/15">
+        <div class="flex aspect-square items-center justify-center bg-linear-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10">
+            @if($fav->image_path)
+                <img src="{{ asset('storage/' . $fav->image_path) }}" alt="{{ $fav->name }}" class="h-full w-full object-cover">
+            @else
+                <x-icon name="bag" class="h-12 w-12 text-cocoa-500/40 dark:text-sage-400/50" />
+            @endif
+        </div>
+        <div class="p-4">
+            <p class="text-[11px] font-bold uppercase tracking-widest text-cocoa-500 dark:text-sage-300">{{ $fav->category->name ?? 'Umum' }}</p>
+            <p class="mt-0.5 line-clamp-1 text-sm font-bold">{{ $fav->name }}</p>
+            <p class="mt-1 text-sm font-extrabold text-ember-600 dark:text-cream-200">Rp {{ number_format($fav->price, 0, ',', '.') }}</p>
+        </div>
+    </a>
+    @endforeach
+</div>
+
+{{-- Keunggulan --}}
+<div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    @php
+    $perks = [
+        ['truck', 'Dikirim cepat', 'Ekspedisi JNE, J&T, SiCepat & GoSend.'],
+        ['shield', 'Garansi 7 hari', 'Rusak/cacat produksi? Ganti baru.'],
+        ['chat', 'CS fast respon', 'Tanya-tanya dulu via WhatsApp.'],
+        ['card', 'Bayar fleksibel', 'QRIS & transfer bank + bukti.'],
+    ];
+    @endphp
+    @foreach($perks as [$icon, $title, $desc])
+    <div class="flex gap-3.5 rounded-3xl border border-line/70 bg-card p-5 dark:bg-night-800 dark:border-cream-100/15">
+        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-milk-100 dark:bg-cream-100/5"><x-icon :name="$icon" class="h-5 w-5 text-ember-600 dark:text-sage-300" /></span>
+        <span><span class="block text-sm font-extrabold">{{ $title }}</span><span class="mt-0.5 block text-xs leading-5 text-cocoa-500 dark:text-sage-300">{{ $desc }}</span></span>
+    </div>
+    @endforeach
+</div>
+@endif
 
 {{-- Filter bar --}}
-<div class="mt-8 flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
+<div id="katalog" class="mt-12 flex scroll-mt-24 flex-col lg:flex-row lg:items-center gap-3 justify-between">
     <div>
         <h2 class="text-xl font-extrabold tracking-tight">Jelajahi produk</h2>
         <p class="text-sm text-cocoa-500 dark:text-sage-300">{{ $products->total() }} produk ditemukan @if(request('q')) untuk “{{ request('q') }}” @endif</p>

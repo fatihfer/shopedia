@@ -1,0 +1,47 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    env_file:
+      - .env.production
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      RUN_MIGRATIONS: "true"
+    volumes:
+      # Foto produk & bukti bayar biar tidak hilang saat container di-recreate
+      - shopedia-storage:/var/www/html/storage/app/public
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: shopedia
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - shopedia-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  # Opsional: database manager di http://VPS:8081 (hapus service ini kalau tidak perlu)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  shopedia-storage:
+  shopedia-db:

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -32,6 +33,8 @@ class ProductController extends Controller
         $validated = $this->validateProduct($request);
 
         $validated['slug'] = $this->uniqueSlug($validated['name']);
+        $validated['image_path'] = $this->storeImage($request);
+        unset($validated['image']);
 
         Product::create($validated);
 
@@ -54,6 +57,12 @@ class ProductController extends Controller
             $validated['slug'] = $this->uniqueSlug($validated['name'], $product->id);
         }
 
+        if ($request->hasFile('image')) {
+            $this->deleteImage($product->image_path);
+            $validated['image_path'] = $this->storeImage($request);
+        }
+        unset($validated['image']);
+
         $product->update($validated);
 
         return redirect()->route('admin.products.index')->with('success', 'Produk diperbarui.');
@@ -61,6 +70,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
+        $this->deleteImage($product->image_path);
         $product->delete();
 
         return back()->with('success', 'Produk dihapus.');
@@ -75,8 +85,22 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-            'image_path' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+    }
+
+    private function storeImage(Request $request): ?string
+    {
+        return $request->hasFile('image')
+            ? $request->file('image')->store('products', 'public')
+            : null;
+    }
+
+    private function deleteImage(?string $path): void
+    {
+        if ($path) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     private function uniqueSlug(string $name, ?int $ignoreId = null): string

@@ -25,9 +25,21 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(12)->withQueryString();
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::withCount('products')->orderBy('name')->get();
 
-        return view('products.index', compact('products', 'categories'));
+        // Data khusus homepage (disembunyikan saat filter/pencarian aktif)
+        $isBrowsing = ! $request->filled('q') && ! $request->filled('category') && ! $request->filled('page');
+        $showHero = ! $request->filled('q') && ! $request->filled('category');
+        $featured = $isBrowsing
+            ? Product::with('category')->where('stock', '>', 0)->inRandomOrder()->take(8)->get()
+            : collect();
+
+        $stats = [
+            'products' => Product::count(),
+            'categories' => Category::count(),
+        ];
+
+        return view('products.index', compact('products', 'categories', 'featured', 'stats', 'isBrowsing', 'showHero'));
     }
 
     public function show(Product $product): View
