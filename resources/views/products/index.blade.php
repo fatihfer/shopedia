@@ -21,7 +21,6 @@
             <dl class="mt-8 flex gap-8">
                 <div><dt class="text-2xl font-black tabular-nums">{{ $stats['products'] }}+</dt><dd class="text-xs font-medium text-cocoa-500 dark:text-cream-100/60">Produk original</dd></div>
                 <div class="border-l border-cocoa-900/10 pl-8 dark:border-cream-100/15"><dt class="text-2xl font-black tabular-nums">{{ $stats['categories'] }}</dt><dd class="text-xs font-medium text-cocoa-500 dark:text-cream-100/60">Kategori</dd></div>
-                <div class="border-l border-cocoa-900/10 pl-8 dark:border-cream-100/15"><dt class="flex items-center gap-1 text-2xl font-black tabular-nums">4.9 <x-icon name="star" class="h-5 w-5 text-amber-500" /></dt><dd class="text-xs font-medium text-cocoa-500 dark:text-cream-100/60">Rating pembeli</dd></div>
             </dl>
         </div>
 
@@ -61,7 +60,7 @@
 <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
     @foreach($categories as $cat)
     <a href="{{ route('products.index', ['category' => $cat->slug]) }}" class="card-lift group flex items-center gap-3 rounded-2xl border border-line/70 bg-card p-4 dark:bg-night-800 dark:border-cream-100/15">
-        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-linear-to-br from-petal-200 to-sand-200 text-lg font-black text-cocoa-900 dark:from-sage-600 dark:to-night-800 dark:text-cream-100">{{ mb_substr($cat->name, 0, 1) }}</span>
+        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-linear-to-br from-petal-200 to-sand-200 dark:from-sage-600 dark:to-night-800"><x-icon :name="$cat->iconName()" class="h-6 w-6 text-cocoa-900 dark:text-cream-100" /></span>
         <span class="min-w-0">
             <span class="block truncate text-sm font-bold group-hover:text-cocoa-700 dark:group-hover:text-sage-200">{{ $cat->name }}</span>
             <span class="block text-xs text-cocoa-500/70">{{ $cat->products_count }} produk</span>
@@ -166,7 +165,9 @@
                 <h2 class="mt-1.5 line-clamp-2 font-bold leading-6 group-hover:text-cocoa-700 dark:group-hover:text-sage-200 transition">{{ $product->name }}</h2>
                 <div class="mt-3 flex items-center justify-between">
                     <span class="font-extrabold text-[15px]">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                    <span class="inline-flex items-center gap-1 rounded-full bg-sand-200/60 px-2.5 py-1 text-xs font-medium text-cocoa-500 dark:bg-cream-100/10 dark:text-sage-300"><x-icon name="star" class="h-3.5 w-3.5 text-amber-500" /> 4.9</span>
+                    <span class="text-xs {{ $product->stock > 0 ? 'text-cocoa-500/70' : 'font-bold text-red-500' }}">
+                        {{ $product->stock > 0 ? "Stok {$product->stock}" : 'Habis' }}
+                    </span>
                 </div>
             </div>
         </a>

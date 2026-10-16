@@ -23,8 +23,12 @@
     <div class="space-y-4 lg:col-span-2">
         @foreach($items as $item)
         <div class="flex gap-4 rounded-3xl border border-line/70 bg-card p-4 sm:p-5 dark:bg-night-800 dark:border-cream-100/15 card-lift">
-            <div class="grid h-24 w-24 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-cream-100 to-sage-200 dark:from-cream-100/10 dark:to-cream-100/5">
-                <x-icon name="bag" class="h-10 w-10 text-cocoa-500/50 dark:text-sage-400/60" />
+            <div class="grid h-24 w-24 shrink-0 place-items-center overflow-hidden rounded-2xl bg-linear-to-br from-cream-100 to-sage-200 dark:from-cream-100/10 dark:to-cream-100/5">
+                @if($item['product']->image_path)
+                    <img src="{{ asset('storage/' . $item['product']->image_path) }}" alt="{{ $item['product']->name }}" class="h-full w-full object-cover">
+                @else
+                    <x-icon name="bag" class="h-10 w-10 text-cocoa-500/50 dark:text-sage-400/60" />
+                @endif
             </div>
             <div class="flex-1 min-w-0">
                 <a href="{{ route('products.show', $item['product']) }}" class="font-bold hover:text-cocoa-700 dark:hover:text-sage-300 line-clamp-1 transition">{{ $item['product']->name }}</a>

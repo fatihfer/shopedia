@@ -19,11 +19,6 @@
 </head>
 <body class="min-h-screen flex flex-col bg-milk-50 text-cocoa-900 antialiased dark:bg-night-950 dark:text-cream-100 transition-colors duration-300">
 
-{{-- Announcement bar --}}
-<div class="bg-petal-200 text-cocoa-900 dark:bg-night-800 dark:text-cream-100 dark:border-b dark:border-cream-100/10 text-center text-xs sm:text-sm py-2 px-4">
-    <span class="inline-flex items-center gap-1.5"><x-icon name="truck" class="h-4 w-4" /> Gratis ongkir untuk pembelian pertama</span> &nbsp;·&nbsp; Gunakan kode <span class="font-bold tracking-wide text-ember-600 dark:text-sage-300">HEMAT10</span>
-</div>
-
 {{-- Navbar --}}
 <header class="sticky top-0 z-40 border-b border-line/70 bg-milk-50/85 backdrop-blur-xl dark:bg-night-950/90 dark:border-cream-100/15">
     <div class="mx-auto max-w-7xl px-4 sm:px-6">
@@ -48,8 +43,6 @@
 
             {{-- Actions --}}
             <nav class="flex items-center gap-1.5 sm:gap-2 text-sm">
-                <a href="{{ route('products.index') }}" class="hidden sm:inline-flex rounded-full px-3.5 py-2 font-medium text-cocoa-700 hover:bg-sand-200 hover:text-cocoa-900 dark:text-cream-100/80 dark:hover:bg-cream-100/10 dark:hover:text-white transition">Katalog</a>
-
                 {{-- Dark toggle --}}
                 <button type="button" data-theme-toggle data-theme-icon aria-label="Mode gelap"
                     class="grid h-10 w-10 place-items-center rounded-full border border-line text-lg hover:bg-sand-200 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">
@@ -68,14 +61,31 @@
                 </a>
 
                 @auth
-                    <a href="{{ route('orders.index') }}" class="hidden lg:inline-flex rounded-full px-3.5 py-2 font-medium text-cocoa-700 hover:bg-sand-200 dark:text-cream-100/80 dark:hover:bg-cream-100/10 transition">Pesanan</a>
                     @if(auth()->user()->isAdmin())
                         <a href="{{ route('admin.dashboard') }}" class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-4 py-2 font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition"><x-icon name="sparkles" class="h-4 w-4" /> Admin</a>
                     @endif
-                    <form method="POST" action="{{ route('logout') }}" class="hidden sm:inline">
-                        @csrf
-                        <button class="rounded-full px-3.5 py-2 text-cocoa-500 hover:text-red-600 dark:text-sage-300 transition" title="Logout ({{ auth()->user()->name }})">Keluar</button>
-                    </form>
+                    {{-- Avatar + dropdown profil --}}
+                    <div class="relative hidden sm:block group">
+                        <button class="grid h-10 w-10 place-items-center rounded-full bg-night-950 font-black text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 transition" aria-label="Menu akun">
+                            {{ mb_strtoupper(mb_substr(auth()->user()->name ?? 'P', 0, 1)) }}
+                        </button>
+                        <div class="absolute right-0 top-full hidden pt-2 group-hover:block group-focus-within:block">
+                            <div class="w-56 overflow-hidden rounded-2xl border border-line bg-card shadow-xl dark:bg-night-800 dark:border-cream-100/15">
+                                <div class="border-b border-line/60 px-4 py-3 dark:border-cream-100/10">
+                                    <p class="truncate text-sm font-extrabold">{{ auth()->user()->name }}</p>
+                                    <p class="truncate text-xs text-cocoa-500/70">{{ auth()->user()->email }}</p>
+                                </div>
+                                <div class="p-2 text-sm font-medium">
+                                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-milk-100 dark:hover:bg-cream-100/5 transition"><x-icon name="user" class="h-4 w-4" /> Profil</a>
+                                    <a href="{{ route('orders.index') }}" class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-milk-100 dark:hover:bg-cream-100/5 transition"><x-icon name="box" class="h-4 w-4" /> Pesanan Saya</a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition"><x-icon name="logout" class="h-4 w-4" /> Logout</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="rounded-full px-3.5 py-2 font-medium text-cocoa-700 hover:bg-sand-200 dark:text-cream-100/80 dark:hover:bg-cream-100/10 transition">Masuk</a>
                     <a href="{{ route('register') }}" class="rounded-full bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-4 py-2 font-semibold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition">Daftar</a>
@@ -92,9 +102,9 @@
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari produk..."
                     class="w-full rounded-xl border border-line bg-sand-200/60 px-4 py-2.5 text-sm dark:bg-cream-100/5 dark:border-cream-100/15" />
             </form>
-            <a href="{{ route('products.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-sand-200 dark:hover:bg-cream-100/10 font-medium">Katalog</a>
             <a href="{{ route('cart.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-sand-200 dark:hover:bg-cream-100/10">Keranjang ({{ array_sum(session('cart', [])) }})</a>
             @auth
+                <a href="{{ route('profile.edit') }}" class="block rounded-xl px-4 py-2.5 hover:bg-sand-200 dark:hover:bg-cream-100/10">Profil ({{ auth()->user()->name }})</a>
                 <a href="{{ route('orders.index') }}" class="block rounded-xl px-4 py-2.5 hover:bg-sand-200 dark:hover:bg-cream-100/10">Pesanan Saya</a>
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 rounded-xl px-4 py-2.5 font-semibold text-cocoa-700 dark:text-sage-300"><x-icon name="sparkles" class="h-4 w-4" /> Admin Dashboard</a>
@@ -144,48 +154,109 @@
 
 {{-- Footer --}}
 <footer class="mt-8 border-t border-line bg-card dark:bg-night-800 dark:border-cream-100/15">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 py-12 grid gap-10 md:grid-cols-4">
-        <div class="md:col-span-2">
+    {{-- Trust strip --}}
+    <div class="border-b border-line/60 dark:border-cream-100/10">
+        <div class="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 sm:px-6 py-6 lg:grid-cols-4">
+            @php
+            $trusts = [
+                ['shield', '100% Original', 'Garansi uang kembali'],
+                ['truck', 'Pengiriman Cepat', 'JNE, J&T, SiCepat, GoSend'],
+                ['card', 'Pembayaran Lengkap', 'QRIS & transfer bank'],
+                ['chat', 'CS Fast Respon', 'Senin–Sabtu via WhatsApp'],
+            ];
+            @endphp
+            @foreach($trusts as [$icon, $title, $desc])
+            <div class="flex items-center gap-3">
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-milk-100 dark:bg-cream-100/5"><x-icon :name="$icon" class="h-5 w-5 text-ember-600 dark:text-sage-300" /></span>
+                <span><span class="block text-xs font-extrabold">{{ $title }}</span><span class="block text-[11px] text-cocoa-500/70">{{ $desc }}</span></span>
+            </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 py-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
             <div class="flex items-center gap-2.5">
                 <span class="grid h-9 w-9 place-items-center rounded-xl bg-linear-to-br from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 text-white font-black text-lg">S</span>
                 <span class="font-extrabold text-lg tracking-tight">Shopedia</span>
             </div>
-            <p class="mt-3 max-w-sm text-sm leading-6 text-cocoa-500 dark:text-sage-300">
-                Toko online modern berbasis Laravel — katalog cepat, keranjang instan, checkout aman, dan panel admin yang rapi.
+            <p class="mt-3 max-w-xs text-sm leading-6 text-cocoa-500 dark:text-sage-300">
+                Sneakers, skincare, kopi sampai elektronik — 100% original, dikirim cepat ke seluruh Indonesia.
             </p>
             <div class="mt-4 flex gap-2">
-                <button data-theme-toggle class="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-xs font-medium hover:bg-sand-200 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition"><x-icon name="theme" class="h-4 w-4" /> Ganti tema</button>
-                <a href="{{ route('products.index') }}" class="inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-4 py-2 text-xs font-semibold text-white hover:bg-gray-700 dark:bg-cream-100 dark:text-night-950 transition">Mulai belanja <x-icon name="arrow-right" class="h-3.5 w-3.5" /></a>
+                @php
+                $socials = [
+                    ['instagram', 'Instagram', 'https://instagram.com'],
+                    ['facebook', 'Facebook', 'https://facebook.com'],
+                    ['x-logo', 'X', 'https://x.com'],
+                    ['youtube', 'YouTube', 'https://youtube.com'],
+                ];
+                @endphp
+                @foreach($socials as [$icon, $label, $url])
+                <a href="{{ $url }}" target="_blank" title="{{ $label }}" class="grid h-9 w-9 place-items-center rounded-full border border-line text-cocoa-500 hover:bg-night-950 hover:text-cream-100 hover:border-night-950 dark:border-cream-100/15 dark:text-sage-300 dark:hover:bg-cream-100 dark:hover:text-night-950 transition"><x-icon :name="$icon" class="h-4 w-4" /></a>
+                @endforeach
+                <button data-theme-toggle title="Ganti tema" class="grid h-9 w-9 place-items-center rounded-full border border-line text-cocoa-500 hover:bg-sand-200 dark:border-cream-100/15 dark:text-sage-300 dark:hover:bg-cream-100/10 transition"><x-icon name="theme" class="h-4 w-4" /></button>
             </div>
         </div>
         <div>
             <h3 class="text-sm font-bold uppercase tracking-wider text-cocoa-500/70">Belanja</h3>
             <ul class="mt-3 space-y-2 text-sm">
-                <li><a href="{{ route('products.index') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Semua produk</a></li>
-                <li><a href="{{ route('cart.index') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Keranjang</a></li>
-                <li><a href="{{ route('checkout.index') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Checkout</a></li>
-                <li><a href="{{ route('orders.index') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Lacak pesanan</a></li>
-                <li><a href="{{ route('contact') }}" class="inline-flex items-center gap-1.5 text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80"><x-icon name="chat" class="h-4 w-4" /> Hubungi Kami</a></li>
+                <li><a href="{{ route('products.index') }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">Semua produk</a></li>
+                @foreach($footerCategories as $cat)
+                <li><a href="{{ route('products.index', ['category' => $cat->slug]) }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">{{ $cat->name }}</a></li>
+                @endforeach
+                <li><a href="{{ route('cart.index') }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">Keranjang</a></li>
             </ul>
         </div>
         <div>
-            <h3 class="text-sm font-bold uppercase tracking-wider text-cocoa-500/70">Akun</h3>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-cocoa-500/70">Bantuan</h3>
             <ul class="mt-3 space-y-2 text-sm">
-                @guest
-                    <li><a href="{{ route('login') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Masuk</a></li>
-                    <li><a href="{{ route('register') }}" class="text-cocoa-700 hover:text-cocoa-700 dark:text-cream-100/80">Daftar</a></li>
-                @else
-                    <li class="text-cocoa-500 dark:text-sage-300">Halo, {{ auth()->user()->name }}</li>
-                    @if(auth()->user()->isAdmin())
-                        <li><a href="{{ route('admin.dashboard') }}" class="text-cocoa-700 dark:text-sage-300 font-medium">Admin dashboard</a></li>
-                    @endif
-                @endguest
-                <li class="text-cocoa-500/70 text-xs pt-2">v1.0 · Laravel {{ app()->version() }}</li>
+                <li><a href="{{ route('orders.index') }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">Lacak pesanan</a></li>
+                <li><a href="{{ route('contact') }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">Hubungi Kami</a></li>
+                <li><a href="{{ route('info.show', 'syarat-ketentuan') }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">Syarat & Ketentuan</a></li>
+                <li><a href="{{ route('info.show', 'kebijakan-privasi') }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">Kebijakan Privasi</a></li>
+                <li><a href="{{ route('info.show', 'pengembalian-barang') }}" class="text-cocoa-700 hover:underline dark:text-cream-100/80">Pengembalian Barang</a></li>
             </ul>
         </div>
+        <div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-cocoa-500/70">Dapatkan Promo</h3>
+            <p class="mt-3 text-sm text-cocoa-500 dark:text-sage-300">Daftarkan email untuk info diskon & produk baru.</p>
+            <form method="POST" action="{{ route('newsletter.store') }}" class="mt-3 flex gap-2">
+                @csrf
+                <input type="email" name="email" required maxlength="100" placeholder="kamu@email.com"
+                    class="min-w-0 flex-1 rounded-2xl border border-line bg-milk-100 px-4 py-2.5 text-sm outline-none focus:border-apricot-400 dark:focus:border-sage-500 dark:bg-cream-100/5 dark:border-cream-100/15 transition">
+                <button class="shrink-0 rounded-2xl bg-night-950 px-4 py-2.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition">OK</button>
+            </form>
+            <div class="mt-4 space-y-1.5 text-sm text-cocoa-500 dark:text-sage-300">
+                <p>{{ config('contact.hours') }}</p>
+                @if(config('contact.admin_wa'))
+                <p>WA: {{ config('contact.admin_wa') }}</p>
+                @endif
+            </div>
+        </div>
     </div>
+
+    {{-- Pembayaran & ekspedisi --}}
+    <div class="border-t border-line/60 dark:border-cream-100/10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 py-5 space-y-3 text-xs">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="font-bold uppercase tracking-wider text-cocoa-500/70">Bayar via:</span>
+                @foreach($footerPayments as $pay)
+                <span class="rounded-lg border border-line bg-milk-100 px-2.5 py-1 font-bold dark:border-cream-100/15 dark:bg-cream-100/5">{{ $pay->name }}</span>
+                @endforeach
+                <span class="rounded-lg border border-line bg-milk-100 px-2.5 py-1 font-bold dark:border-cream-100/15 dark:bg-cream-100/5">COD</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="font-bold uppercase tracking-wider text-cocoa-500/70">Ekspedisi:</span>
+                @foreach(config('shipping.couriers') as $courier)
+                <span class="rounded-lg border border-line bg-milk-100 px-2.5 py-1 font-bold dark:border-cream-100/15 dark:bg-cream-100/5">{{ $courier }}</span>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
     <div class="border-t border-line/60 dark:border-cream-100/10 py-5 text-center text-xs text-cocoa-500/70">
-        © {{ date('Y') }} Shopedia — dibuat dengan Laravel + Tailwind CSS
+        © {{ date('Y') }} Shopedia · 100% Original · Harga dalam Rupiah (IDR)
     </div>
 </footer>
 </body>

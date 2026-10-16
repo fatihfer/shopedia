@@ -14,4 +14,18 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    /** Nama ikon (lihat components/icon) berdasarkan slug kategori. */
+    public function iconName(): string
+    {
+        return match ($this->slug) {
+            'elektronik' => 'bolt',
+            'fashion' => 'bag',
+            'kopi' => 'cup',
+            'rumah-tangga' => 'home',
+            'skincare' => 'sparkles',
+            'sneakers' => 'shoe',
+            default => 'tag',
+        };
+    }
 }

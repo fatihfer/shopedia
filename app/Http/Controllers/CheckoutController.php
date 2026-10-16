@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Services\MidtransService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
+    public function __construct(private readonly MidtransService $midtrans) {}
     public function index(Request $request): View|RedirectResponse
     {
         $cart = session()->get('cart', []);
@@ -50,6 +53,7 @@ class CheckoutController extends Controller
             'shipping_service' => ['required', Rule::in(array_keys($services))],
             'latitude' => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'save_profile' => ['sometimes', 'boolean'],
             'payment_method_id' => [
                 'required',
                 Rule::exists('payment_methods', 'id')->where('is_active', true),
@@ -71,8 +75,10 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong.');
         }
 
-        return DB::transaction(function () use ($cart, $validated, $shippingCost, $request) {
-            $products = Product::whereIn('id', array_keys($cart))->lockForUpdate()->get()->keyBy('id');
+        $method = PaymentMethod::findOrFail($validated['payment_method_id']);
+
+        /** @var Order $order */
+        $order = DB::transaction(function () use ($cart, $validated, $shippingCost, $request) {            $products = Product::whereIn('id', array_keys($cart))->lockForUpdate()->get()->keyBy('id');
 
             $itemsTotal = 0;
             foreach ($cart as $productId => $qty) {
@@ -120,7 +126,58 @@ class CheckoutController extends Controller
 
             session()->forget('cart');
 
-            return redirect()->route('orders.show', $order)->with('success', 'Pesanan berhasil dibuat! Lanjutkan ke pembayaran.');
+            return $order;
         });
+
+        // QRIS dinamis: minta QR ke Midtrans setelah order tersimpan
+        // (di luar transaction agar lock DB tidak menahan request HTTP).
+        if ($method->isGateway()) {
+            if (config('payment.demo_mode')) {
+                $token = Str::random(32);
+                while (Order::where('pay_token', $token)->exists()) {
+                    $token = Str::random(32);
+                }
+
+                $order->update([
+                    'gateway_ref' => 'DEMO-' . $order->id . '-' . time(),
+                    'pay_token' => $token,
+                    'qr_string' => route('pay.show', ['token' => $token]),
+                    'expired_at' => now()->addMinutes(config('payment.demo_expiry_minutes')),
+                ]);
+            } else {
+                try {
+                    $gatewayOrderId = 'SHOPEDIA-' . $order->id . '-' . time();
+                    $charge = $this->midtrans->chargeQris($order->fresh('user'), $gatewayOrderId);
+
+                    $order->update([
+                        'gateway_ref' => $gatewayOrderId,
+                        'qr_string' => $charge['qr_string'],
+                        'qr_image_url' => $charge['qr_image_url'],
+                        'expired_at' => now()->addMinutes(30),
+                    ]);
+                } catch (\Exception $e) {
+                    report($e);
+
+                    DB::transaction(function () use ($order) {
+                        $order->restoreStock();
+                        $order->update(['status' => 'cancelled', 'gateway_ref' => null]);
+                    });
+
+                    return redirect()->route('orders.index')
+                        ->with('error', 'Gagal membuat QR pembayaran, pesanan dibatalkan. Silakan coba lagi.');
+                }
+            }
+        }
+
+        // Simpan ke profil bila dicentang (biar checkout berikutnya terisi otomatis).
+        if ($request->boolean('save_profile')) {
+            $request->user()->update([
+                'name' => $validated['recipient_name'],
+                'phone' => $validated['recipient_phone'],
+                'address' => $validated['shipping_address'],
+            ]);
+        }
+
+        return redirect()->route('orders.show', $order)->with('success', 'Pesanan berhasil dibuat! Lanjutkan ke pembayaran.');
     }
 }

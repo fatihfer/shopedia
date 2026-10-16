@@ -14,6 +14,10 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'payment_method_id',
+        'gateway_ref',
+        'qr_string',
+        'qr_image_url',
+        'pay_token',
         'total_price',
         'status',
         'recipient_name',
@@ -63,6 +67,13 @@ class Order extends Model
     public function isUnpaid(): bool
     {
         return in_array($this->status, self::UNPAID_STATUSES, true);
+    }
+
+    public function isGateway(): bool
+    {
+        return (bool) $this->gateway_ref
+            && $this->paymentMethod !== null
+            && $this->paymentMethod->isGateway();
     }
 
     /** Kembalikan stok lalu tandai expired bila sudah lewat batas bayar. */

@@ -18,8 +18,6 @@
             <span class="absolute top-4 left-4 rounded-full bg-black/60 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">{{ $product->category->name ?? 'Umum' }}</span>
         </div>
         <div class="flex items-center gap-4 border-t border-line/60 px-6 py-4 text-sm dark:border-cream-100/10">
-            <span class="inline-flex items-center gap-1.5 font-semibold"><x-icon name="star" class="h-4 w-4 text-amber-500" /> 4.9 <span class="font-normal text-cocoa-500/70">(128 ulasan)</span></span>
-            <span class="text-sand-300 dark:text-gray-700">|</span>
             <span class="inline-flex items-center gap-1.5 text-cocoa-500 dark:text-sage-300"><x-icon name="truck" class="h-4 w-4" /> Siap kirim hari ini</span>
         </div>
     </div>
@@ -79,7 +77,13 @@
 <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
     @foreach($related as $r)
     <a href="{{ route('products.show', $r) }}" class="card-lift overflow-hidden rounded-3xl border border-line/70 bg-card hover:shadow-xl dark:bg-night-800 dark:border-cream-100/15">
-        <div class="aspect-square bg-linear-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10 flex items-center justify-center"><x-icon name="bag" class="h-12 w-12 text-cocoa-500/40 dark:text-sage-400/50" /></div>
+        <div class="flex aspect-square items-center justify-center overflow-hidden bg-linear-to-br from-petal-100 to-sand-200 dark:from-cream-100/5 dark:to-cream-100/10">
+            @if($r->image_path)
+                <img src="{{ asset('storage/' . $r->image_path) }}" alt="{{ $r->name }}" class="h-full w-full object-cover">
+            @else
+                <x-icon name="bag" class="h-12 w-12 text-cocoa-500/40 dark:text-sage-400/50" />
+            @endif
+        </div>
         <div class="p-4">
             <p class="line-clamp-1 text-sm font-bold">{{ $r->name }}</p>
             <p class="mt-1 text-sm font-extrabold text-cocoa-700 dark:text-sage-300">Rp {{ number_format($r->price, 0, ',', '.') }}</p>

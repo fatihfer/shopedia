@@ -5,17 +5,36 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PaymentMethodController as AdminPaymentMethodController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\InfoController;
+use App\Http\Controllers\MidtransWebhookController;
+use App\Http\Controllers\PayController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubscriberController;
 use Illuminate\Support\Facades\Route;
 
 // Storefront
 Route::get('/', [ProductController::class, 'index'])->name('home');
 Route::get('/kontak', fn () => view('contact'))->name('contact');
+Route::get('/info/{slug}', [InfoController::class, 'show'])->name('info.show');
+Route::post('/newsletter', [SubscriberController::class, 'store'])->name('newsletter.store');
+
+// Halaman bayar publik via token (mode demo, tanpa login)
+Route::get('/bayar/{token}', [PayController::class, 'show'])->name('pay.show');
+Route::post('/bayar/{token}', [PayController::class, 'confirm'])
+    ->middleware('throttle:10,1')
+    ->name('pay.confirm');
+
+// Webhook Midtrans (tanpa CSRF karena dipanggil server-to-server)
+Route::post('/midtrans/notify', [MidtransWebhookController::class, 'handle'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])
+    ->name('midtrans.notify');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
@@ -25,6 +44,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/register/verify', [AuthController::class, 'showVerify'])->name('register.verify');
+    Route::post('/register/verify', [AuthController::class, 'verify'])->name('register.verify.store');
+    Route::post('/register/resend', [AuthController::class, 'resend'])->name('register.resend');
 
     Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.redirect');
     Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('google.callback');
@@ -40,15 +62,20 @@ Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.u
 Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::post('/cart-clear', [CartController::class, 'clear'])->name('cart.clear');
 
-// Checkout + orders (must login)
+// Checkout + orders + profil (must login)
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/payment-status', [OrderController::class, 'paymentStatus'])->name('orders.payment-status');
+    Route::post('/orders/{order}/sync-payment', [OrderController::class, 'syncPayment'])->name('orders.sync-payment');
     Route::post('/orders/{order}/proof', [OrderController::class, 'uploadProof'])->name('orders.proof');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+    Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // Admin
@@ -64,4 +91,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('orders/{order}/notify', [AdminOrderController::class, 'notify'])->name('orders.notify');
 
     Route::resource('payment-methods', AdminPaymentMethodController::class)->except(['show']);
+
+    Route::get('subscribers', [AdminSubscriberController::class, 'index'])->name('subscribers.index');
 });

@@ -1,12 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Metode Pembayaran')
+@section('header', 'Pembayaran')
 @section('content')
-<div class="flex flex-wrap items-center justify-between gap-3">
-    <div>
-        <h1 class="flex items-center gap-2 text-2xl font-black tracking-tight"><x-icon name="card" class="h-6 w-6 text-ember-600 dark:text-sage-300" /> Metode Pembayaran</h1>
-        <p class="text-sm text-cocoa-500 dark:text-sage-300">Rekening & QRIS yang tampil saat checkout.</p>
-    </div>
-    <a href="{{ route('admin.payment-methods.create') }}" class="rounded-2xl bg-linear-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg hover:opacity-90 transition">+ Metode</a>
+<div class="mb-4 flex items-center justify-between gap-3">
+    <p class="text-sm text-gray-500 dark:text-sage-300">Rekening & QRIS yang tampil saat checkout.</p>
+    <a href="{{ route('admin.payment-methods.create') }}" class="inline-flex items-center gap-1.5 rounded-xl bg-night-950 px-4 py-2.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 transition"><x-icon name="plus" class="h-4 w-4" /> Metode</a>
 </div>
 <div class="mt-5 grid gap-4 sm:grid-cols-2">
     @foreach($methods as $m)
@@ -17,7 +15,9 @@
                 <div>
                     <p class="font-extrabold">{{ $m->name }}</p>
                     <p class="text-xs text-cocoa-500/70">
-                        @if($m->isQris()) QRIS @else {{ $m->account_number }} a.n. {{ $m->account_name }} @endif
+                        @if($m->isGateway()) <span class="inline-flex items-center gap-1"><x-icon name="bolt" class="h-3.5 w-3.5" /> QR dinamis Midtrans</span>
+                        @elseif($m->isQris()) QRIS manual
+                        @else {{ $m->account_number }} a.n. {{ $m->account_name }} @endif
                         · {{ $m->orders_count }} order
                     </p>
                 </div>

@@ -1,8 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Kelola Pesanan')
+@section('header', 'Pesanan')
 @section('content')
-<h1 class="flex items-center gap-2 text-2xl font-black tracking-tight"><x-icon name="receipt" class="h-6 w-6 text-ember-600 dark:text-sage-300" /> Semua Pesanan</h1>
-<p class="text-sm text-cocoa-500 dark:text-sage-300">Klik ID untuk detail & verifikasi pembayaran.</p>
 <div class="mt-4 flex flex-wrap gap-2 text-xs font-bold">
     @php $tabs = ['' => 'Semua', 'awaiting_verification' => 'Perlu verifikasi', 'awaiting_payment' => 'Menunggu bayar', 'processing' => 'Diproses', 'completed' => 'Selesai']; @endphp
     @foreach($tabs as $value => $text)

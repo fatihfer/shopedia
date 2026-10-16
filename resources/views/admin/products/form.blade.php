@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', ($product->exists ? 'Edit' : 'Tambah') . ' Produk')
+@section('header', ($product->exists ? 'Edit' : 'Tambah') . ' Produk')
 @section('content')
-<h1 class="flex items-center gap-2 text-2xl font-black tracking-tight"><x-icon name="box" class="h-6 w-6 text-ember-600 dark:text-sage-300" /> {{ $product->exists ? 'Edit' : 'Tambah' }} Produk</h1>
 <form method="POST" action="{{ $product->exists ? route('admin.products.update', $product) : route('admin.products.store') }}" enctype="multipart/form-data"
     class="mt-5 max-w-2xl space-y-4 rounded-3xl border border-line/70 bg-card p-6 sm:p-8 dark:bg-night-800 dark:border-cream-100/15">
     @csrf

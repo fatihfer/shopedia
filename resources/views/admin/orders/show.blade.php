@@ -1,5 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Pesanan #' . $order->id)
+@section('header', 'Detail Pesanan')
 @section('content')
 <a href="{{ route('admin.orders.index') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-cocoa-500 hover:text-cocoa-700 dark:text-sage-300 transition"><x-icon name="arrow-left" class="h-4 w-4" /> Semua pesanan</a>
 <div class="mt-4 grid gap-6 lg:grid-cols-3">

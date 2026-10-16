@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'Kelola Produk')
+@section('header', 'Produk')
 @section('content')
-<div class="flex flex-wrap items-center justify-between gap-3">
-    <h1 class="text-2xl font-black tracking-tight">Produk <span class="text-sm font-medium text-cocoa-500/70">({{ $products->total() }})</span></h1>
-    <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-1.5 rounded-2xl bg-gradient-to-r from-night-900 to-sage-600 dark:from-sage-500 dark:to-sage-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-night-900/25 dark:shadow-black/50 hover:opacity-90 transition"><x-icon name="plus" class="h-4 w-4" /> Tambah Produk</a>
+<div class="mb-4 flex items-center justify-between gap-3">
+    <p class="text-sm text-gray-500 dark:text-sage-300">{{ $products->total() }} produk</p>
+    <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-1.5 rounded-xl bg-night-950 px-4 py-2.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 transition"><x-icon name="plus" class="h-4 w-4" /> Tambah Produk</a>
 </div>
 <div class="mt-5 overflow-hidden rounded-3xl border border-line/70 bg-card dark:bg-night-800 dark:border-cream-100/15">
     <div class="overflow-x-auto">

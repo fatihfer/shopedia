@@ -1,59 +1,118 @@
-@extends('layouts.app')
-@section('title', 'Admin Dashboard')
+@extends('layouts.admin')
+@section('title', 'Dashboard')
+@section('header', 'Overview')
 @section('content')
-<div class="flex flex-wrap items-center justify-between gap-3">
-    <div>
-        <h1 class="flex items-center gap-2.5 text-2xl sm:text-3xl font-black tracking-tight">Dashboard <x-icon name="sparkles" class="h-7 w-7 text-ember-600 dark:text-sage-300" /></h1>
-        <p class="text-sm text-cocoa-500 dark:text-sage-300">Ringkasan performa tokomu hari ini.</p>
-    </div>
-    <div class="flex gap-2 text-sm font-medium">
-        <a href="{{ route('admin.products.index') }}" class="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition"><x-icon name="box" class="h-4 w-4" /> Produk</a>
-        <a href="{{ route('admin.categories.index') }}" class="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition"><x-icon name="folder" class="h-4 w-4" /> Kategori</a>
-        <a href="{{ route('admin.orders.index') }}" class="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition"><x-icon name="receipt" class="h-4 w-4" /> Pesanan</a>
-        <a href="{{ route('admin.payment-methods.index') }}" class="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-4 py-2 hover:bg-sand-200 dark:bg-cream-100/5 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition"><x-icon name="card" class="h-4 w-4" /> Bayar</a>
-    </div>
-</div>
 
-<div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+{{-- Stat cards --}}
+<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     @php
-    $cards = [
-        ['Omzet Bersih', 'Rp ' . number_format($totalRevenue, 0, ',', '.'), 'money', 'from-emerald-500 to-teal-500'],
-        ['Total Order', $totalOrders, 'receipt', 'from-sage-500 to-night-700'],
-        ['Pending', $pendingOrders, 'clock', 'from-amber-500 to-orange-500'],
-        ['Produk', $totalProducts, 'box', 'from-sky-500 to-blue-500'],
-        ['Customer', $totalCustomers, 'users', 'from-fuchsia-500 to-pink-500'],
+    $stats = [
+        ['Omzet', 'Rp ' . number_format($totalRevenue, 0, ',', '.'), '30 hari: Rp ' . number_format($revenue30, 0, ',', '.'), 'money', 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300'],
+        ['Total Order', $totalOrders, $orders30 . ' order 30 hari terakhir', 'receipt', 'bg-sky-100 text-sky-600 dark:bg-sky-500/10 dark:text-sky-300'],
+        ['Customer', $totalCustomers, 'akun terdaftar', 'users', 'bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-300'],
+        ['Perlu Verifikasi', $pendingOrders, 'pembayaran menunggu', 'clock', 'bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:text-amber-300'],
     ];
     @endphp
-    @foreach($cards as [$label, $value, $icon, $grad])
-    <div class="rounded-3xl border border-line/70 bg-card p-5 dark:bg-night-800 dark:border-cream-100/15 card-lift">
-        <span class="grid h-10 w-10 place-items-center rounded-2xl bg-linear-to-br {{ $grad }} text-white shadow"><x-icon :name="$icon" class="h-5 w-5" /></span>
-        <p class="mt-3 text-xs font-bold uppercase tracking-wider text-cocoa-500/70">{{ $label }}</p>
-        <p class="text-lg font-black truncate">{{ $value }}</p>
+    @foreach($stats as [$label, $value, $sub, $icon, $chip])
+    <div class="rounded-2xl bg-white p-5 shadow-sm dark:bg-night-800">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500 dark:text-sage-300">{{ $label }}</p>
+                <p class="mt-0.5 text-xs text-gray-400">{{ $sub }}</p>
+            </div>
+            <span class="grid h-10 w-10 place-items-center rounded-full {{ $chip }}"><x-icon :name="$icon" class="h-5 w-5" /></span>
+        </div>
+        <p class="mt-3 text-2xl font-black tracking-tight tabular-nums">{{ $value }}</p>
     </div>
     @endforeach
 </div>
 
-<div class="mt-6 grid gap-6 lg:grid-cols-2">
-    <div class="rounded-3xl border border-line/70 bg-card p-6 dark:bg-night-800 dark:border-cream-100/15">
-        <div class="flex items-center justify-between"><h2 class="font-extrabold">Pesanan Terbaru</h2><a href="{{ route('admin.orders.index') }}" class="inline-flex items-center gap-1 text-xs font-bold text-cocoa-700 dark:text-sage-300">Lihat semua <x-icon name="arrow-right" class="h-3.5 w-3.5" /></a></div>
-        <div class="mt-3 space-y-1 text-sm">
-            @forelse($recentOrders as $o)
-            <a href="{{ route('admin.orders.show', $o) }}" class="flex justify-between gap-3 rounded-2xl px-3 py-2.5 hover:bg-milk-100 dark:hover:bg-cream-100/5 transition">
-                <span class="truncate"><span class="font-extrabold">#{{ $o->id }}</span> · {{ $o->user->name ?? '-' }} · <span class="font-semibold">Rp {{ number_format($o->total_price, 0, ',', '.') }}</span></span>
-                <span class="shrink-0 uppercase text-xs text-cocoa-500/70">{{ $o->status }}</span>
-            </a>
-            @empty <p class="text-cocoa-500 text-sm">Belum ada order.</p> @endforelse
+<div class="mt-5 grid gap-5 lg:grid-cols-3">
+    {{-- Sales chart --}}
+    <div class="rounded-2xl bg-white p-6 shadow-sm lg:col-span-2 dark:bg-night-800">
+        <div class="flex items-center justify-between">
+            <h2 class="font-extrabold">Grafik Penjualan</h2>
+            <span class="text-xs text-gray-400">7 hari terakhir · omzet lunas</span>
         </div>
-    </div>
-    <div class="rounded-3xl border border-line/70 bg-card p-6 dark:bg-night-800 dark:border-cream-100/15">
-        <h2 class="flex items-center gap-2 font-extrabold"><x-icon name="alert" class="h-5 w-5 text-amber-500" /> Stok Menipis</h2>
-        <div class="mt-3 space-y-1 text-sm">
-            @foreach($lowStock as $p)
-            <div class="flex justify-between gap-3 rounded-2xl px-3 py-2.5 hover:bg-milk-100 dark:hover:bg-cream-100/5">
-                <span class="truncate font-medium">{{ $p->name }}</span>
-                <span class="font-black {{ $p->stock < 5 ? 'text-red-500' : 'text-cocoa-500/70' }}">{{ $p->stock }} pcs</span>
+        <div class="mt-5 flex h-44 items-end gap-2 sm:gap-3">
+            @foreach($week as $day)
+            <div class="flex flex-1 flex-col items-center gap-1.5">
+                <span class="text-[10px] font-bold tabular-nums text-gray-400">{{ $day['revenue'] > 0 ? number_format($day['revenue'] / 1000, 0) . 'rb' : '' }}</span>
+                <div class="w-full rounded-t-lg bg-teal-200 dark:bg-sage-600" style="height: {{ max(4, $day['revenue'] / $maxRevenue * 100) }}%" title="Rp {{ number_format($day['revenue'], 0, ',', '.') }} · {{ $day['orders'] }} order"></div>
+                <span class="text-[10px] text-gray-400">{{ $day['label'] }}</span>
             </div>
             @endforeach
+        </div>
+    </div>
+
+    {{-- Perlu tindakan --}}
+    <div class="rounded-2xl bg-white p-6 shadow-sm dark:bg-night-800">
+        <h2 class="font-extrabold">Perlu Tindakan</h2>
+        <div class="mt-4 space-y-3 text-sm">
+            <a href="{{ route('admin.orders.index', ['status' => 'awaiting_verification']) }}" class="flex items-center justify-between rounded-xl bg-amber-50 px-4 py-3 hover:bg-amber-100 dark:bg-amber-500/10 transition">
+                <span class="font-bold text-amber-700 dark:text-amber-300">Verifikasi pembayaran</span>
+                <span class="rounded-full bg-amber-500 px-2.5 py-0.5 text-xs font-black text-white">{{ $pendingOrders }}</span>
+            </a>
+            <div class="rounded-xl bg-gray-50 px-4 py-3 dark:bg-cream-100/5">
+                <p class="font-bold">Stok menipis</p>
+                <ul class="mt-1.5 space-y-1 text-xs text-gray-500 dark:text-sage-300">
+                    @forelse($lowStock->take(4) as $p)
+                    <li class="flex justify-between"><span class="truncate">{{ $p->name }}</span><span class="font-black {{ $p->stock < 5 ? 'text-red-500' : '' }}">{{ $p->stock }}</span></li>
+                    @empty
+                    <li>Semua stok aman.</li>
+                    @endforelse
+                </ul>
+            </div>
+            <a href="{{ route('admin.products.create') }}" class="flex items-center justify-center gap-1.5 rounded-xl bg-night-950 px-4 py-2.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 transition">
+                <x-icon name="plus" class="h-4 w-4" /> Tambah Produk
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5 grid gap-5 lg:grid-cols-3">
+    {{-- Top products --}}
+    <div class="rounded-2xl bg-white p-6 shadow-sm lg:col-span-2 dark:bg-night-800">
+        <div class="flex items-center justify-between">
+            <h2 class="font-extrabold">Produk Terlaris</h2>
+            <a href="{{ route('admin.products.index') }}" class="inline-flex items-center gap-1 text-xs font-bold text-gray-400 hover:text-gray-600">Semua <x-icon name="arrow-right" class="h-3.5 w-3.5" /></a>
+        </div>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            @forelse($topProducts as $item)
+            <div class="overflow-hidden rounded-2xl border border-gray-100 dark:border-cream-100/10">
+                <div class="flex aspect-[4/3] items-center justify-center bg-gray-50 dark:bg-cream-100/5">
+                    @if($item->product?->image_path)
+                        <img src="{{ asset('storage/' . $item->product->image_path) }}" alt="" class="h-full w-full object-cover">
+                    @else
+                        <x-icon name="bag" class="h-10 w-10 text-gray-300 dark:text-sage-500" />
+                    @endif
+                </div>
+                <div class="p-3">
+                    <p class="line-clamp-1 text-sm font-bold">{{ $item->product->name ?? '-' }}</p>
+                    <p class="text-xs text-gray-400">{{ $item->sold }} terjual</p>
+                </div>
+            </div>
+            @empty
+            <p class="col-span-full rounded-2xl bg-gray-50 p-8 text-center text-sm text-gray-400 dark:bg-cream-100/5">Belum ada penjualan tercatat.</p>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Recent orders --}}
+    <div class="rounded-2xl bg-white p-6 shadow-sm dark:bg-night-800">
+        <div class="flex items-center justify-between">
+            <h2 class="font-extrabold">Order Terbaru</h2>
+            <a href="{{ route('admin.orders.index') }}" class="inline-flex items-center gap-1 text-xs font-bold text-gray-400 hover:text-gray-600">Semua <x-icon name="arrow-right" class="h-3.5 w-3.5" /></a>
+        </div>
+        <div class="mt-3 space-y-1 text-sm">
+            @forelse($recentOrders as $o)
+            <a href="{{ route('admin.orders.show', $o) }}" class="flex items-center justify-between gap-2 rounded-xl px-3 py-2 hover:bg-gray-50 dark:hover:bg-cream-100/5 transition">
+                <span class="min-w-0"><span class="font-extrabold">#{{ $o->id }}</span> <span class="text-gray-400">· {{ $o->user->name ?? '-' }}</span><br><span class="text-xs font-semibold">Rp {{ number_format($o->total_price, 0, ',', '.') }}</span></span>
+                <span class="shrink-0 rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-bold uppercase dark:bg-cream-100/10">{{ str_replace('_', ' ', $o->status) }}</span>
+            </a>
+            @empty
+            <p class="text-sm text-gray-400">Belum ada order.</p>
+            @endforelse
         </div>
     </div>
 </div>

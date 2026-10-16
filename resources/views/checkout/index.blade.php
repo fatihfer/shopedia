@@ -29,14 +29,15 @@
                     </div>
                     <div>
                         <label class="text-sm font-bold">No. HP / WhatsApp</label>
-                        <input name="recipient_phone" value="{{ old('recipient_phone') }}" required maxlength="20" placeholder="cth: 08123456789"
+                        <input name="recipient_phone" value="{{ old('recipient_phone', auth()->user()->phone) }}" required maxlength="20" placeholder="cth: 08123456789"
                             class="mt-1.5 w-full rounded-2xl border border-line bg-milk-100 px-4 py-3 text-sm outline-none focus:border-apricot-400 dark:focus:border-sage-500 dark:bg-cream-100/5 dark:border-cream-100/15 transition">
                     </div>
                 </div>
                 <div class="mt-3">
                     <label class="text-sm font-bold">Alamat lengkap</label>
                     <textarea name="shipping_address" required rows="3" placeholder="Jalan, nomor rumah, patokan, kota, kode pos..."
-                        class="mt-1.5 w-full rounded-2xl border border-line bg-milk-100 px-4 py-3 text-sm leading-6 outline-none focus:border-apricot-400 dark:focus:border-sage-500 focus:ring-4 focus:ring-apricot-400/40 dark:focus:ring-sage-500/20 dark:bg-cream-100/5 dark:border-cream-100/15 transition">{{ old('shipping_address') }}</textarea>
+                        class="mt-1.5 w-full rounded-2xl border border-line bg-milk-100 px-4 py-3 text-sm leading-6 outline-none focus:border-apricot-400 dark:focus:border-sage-500 focus:ring-4 focus:ring-apricot-400/40 dark:focus:ring-sage-500/20 dark:bg-cream-100/5 dark:border-cream-100/15 transition">{{ old('shipping_address', auth()->user()->address) }}</textarea>
+                    <label class="mt-2 flex items-center gap-2 text-sm text-cocoa-500 dark:text-sage-300"><input type="checkbox" name="save_profile" value="1" @checked(old('save_profile', true)) class="h-4 w-4 rounded accent-[#be6a42]"> Simpan sebagai data utama saya</label>
                 </div>
                 <div class="mt-3">
                     <label class="flex items-center gap-1.5 text-sm font-bold"><x-icon name="pin" class="h-4 w-4" /> Pin lokasi <span class="font-normal text-cocoa-500/70">(opsional — klik peta untuk menandai)</span></label>
@@ -87,8 +88,13 @@
                         <span class="min-w-0 flex-1">
                             <span class="block font-bold">{{ $method->name }}</span>
                             <span class="block truncate text-xs text-cocoa-500/70">
-                                @if($method->isQris()) Scan QR bayar instan
-                                @else {{ $method->account_number }} a.n. {{ $method->account_name }} @endif
+                                @if($method->isGateway())
+                                    Otomatis · QR dinamis per order
+                                @elseif($method->isQris())
+                                    Scan QR bayar instan
+                                @else
+                                    {{ $method->account_number }} a.n. {{ $method->account_name }}
+                                @endif
                             </span>
                         </span>
                     </label>

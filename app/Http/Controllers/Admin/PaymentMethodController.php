@@ -80,10 +80,16 @@ class PaymentMethodController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'type' => ['required', 'in:qris,bank_transfer'],
+            'gateway' => ['nullable', 'in:manual,midtrans'],
             'account_number' => ['nullable', 'required_if:type,bank_transfer', 'string', 'max:100'],
             'account_name' => ['nullable', 'string', 'max:100'],
             'qr_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        // Transfer bank selalu manual; QRIS default otomatis Midtrans.
+        $validated['gateway'] = $validated['type'] === 'qris'
+            ? ($validated['gateway'] ?? 'midtrans')
+            : 'manual';
 
         $validated['is_active'] = $request->boolean('is_active');
 

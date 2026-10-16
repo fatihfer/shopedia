@@ -11,7 +11,16 @@ class ProductController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Product::with('category')->latest();
+        // Urutan acak tapi stabil selama satu sesi (seed disimpan di session),
+        // agar pagination tidak duplikat/lompat tiap ganti halaman.
+        $seed = $request->session()->get('product_seed');
+
+        if (! $seed) {
+            $seed = random_int(1, 999999);
+            $request->session()->put('product_seed', $seed);
+        }
+
+        $query = Product::with('category')->inRandomOrder($seed);
 
         if ($search = $request->string('q')->toString()) {
             $query->where(function ($q) use ($search) {
