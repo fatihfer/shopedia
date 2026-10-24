@@ -66,8 +66,7 @@ class DatabaseSeeder extends Seeder
     private function paymentMethods(): array
     {
         return [
-            // QRIS dinamis via Midtrans Sandbox (aktif, menggantikan QR statis)
-            ['slug' => 'qris', 'name' => 'QRIS', 'type' => 'qris', 'gateway' => 'midtrans', 'account_number' => null, 'account_name' => 'Shopedia', 'is_active' => true],
+            ['slug' => 'qris', 'name' => 'QRIS', 'type' => 'qris', 'account_number' => null, 'account_name' => 'Shopedia', 'is_active' => true],
             // Dummy untuk demo
             ['slug' => 'bri', 'name' => 'BRI', 'type' => 'bank_transfer', 'account_number' => '1234-01-001234-50-1', 'account_name' => 'Shopedia (Dummy)', 'is_active' => true],
             ['slug' => 'bca', 'name' => 'BCA', 'type' => 'bank_transfer', 'account_number' => '1234567890', 'account_name' => 'Shopedia (Dummy)', 'is_active' => true],

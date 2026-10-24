@@ -49,7 +49,7 @@ class WhatsApp
         ];
 
         foreach ($order->items as $item) {
-            $name = $item->product->name ?? 'Produk';
+            $name = $item->product_name ?? $item->product->name ?? 'Produk';
             $subtotal = number_format($item->price * $item->quantity, 0, ',', '.');
             $lines[] = "• {$name} ({$item->quantity}x) — Rp{$subtotal}";
         }

@@ -10,10 +10,8 @@ class PaymentMethod extends Model
         'slug',
         'name',
         'type',
-        'gateway',
         'account_number',
         'account_name',
-        'qr_image',
         'is_active',
     ];
 
@@ -30,10 +28,5 @@ class PaymentMethod extends Model
     public function isQris(): bool
     {
         return $this->type === 'qris';
-    }
-
-    public function isGateway(): bool
-    {
-        return $this->gateway === 'midtrans';
     }
 }

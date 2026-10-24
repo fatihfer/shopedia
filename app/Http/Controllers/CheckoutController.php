@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\Product;
-use App\Services\MidtransService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +14,6 @@ use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
-    public function __construct(private readonly MidtransService $midtrans) {}
     public function index(Request $request): View|RedirectResponse
     {
         $cart = session()->get('cart', []);
@@ -117,6 +115,7 @@ class CheckoutController extends Controller
 
                 $order->items()->create([
                     'product_id' => $product->id,
+                    'product_name' => $product->name,
                     'quantity' => $qty,
                     'price' => $product->price,
                 ]);
@@ -129,44 +128,18 @@ class CheckoutController extends Controller
             return $order;
         });
 
-        // QRIS dinamis: minta QR ke Midtrans setelah order tersimpan
-        // (di luar transaction agar lock DB tidak menahan request HTTP).
-        if ($method->isGateway()) {
-            if (config('payment.demo_mode')) {
+        // QRIS: QR berisi link bayar (dibuat setelah order tersimpan).
+        if ($method->isQris()) {
+            $token = Str::random(32);
+            while (Order::where('pay_token', $token)->exists()) {
                 $token = Str::random(32);
-                while (Order::where('pay_token', $token)->exists()) {
-                    $token = Str::random(32);
-                }
-
-                $order->update([
-                    'gateway_ref' => 'DEMO-' . $order->id . '-' . time(),
-                    'pay_token' => $token,
-                    'qr_string' => route('pay.show', ['token' => $token]),
-                    'expired_at' => now()->addMinutes(config('payment.demo_expiry_minutes')),
-                ]);
-            } else {
-                try {
-                    $gatewayOrderId = 'SHOPEDIA-' . $order->id . '-' . time();
-                    $charge = $this->midtrans->chargeQris($order->fresh('user'), $gatewayOrderId);
-
-                    $order->update([
-                        'gateway_ref' => $gatewayOrderId,
-                        'qr_string' => $charge['qr_string'],
-                        'qr_image_url' => $charge['qr_image_url'],
-                        'expired_at' => now()->addMinutes(30),
-                    ]);
-                } catch (\Exception $e) {
-                    report($e);
-
-                    DB::transaction(function () use ($order) {
-                        $order->restoreStock();
-                        $order->update(['status' => 'cancelled', 'gateway_ref' => null]);
-                    });
-
-                    return redirect()->route('orders.index')
-                        ->with('error', 'Gagal membuat QR pembayaran, pesanan dibatalkan. Silakan coba lagi.');
-                }
             }
+
+            $order->update([
+                'pay_token' => $token,
+                'qr_string' => route('pay.show', ['token' => $token]),
+                'expired_at' => now()->addMinutes(Order::PAYLINK_EXPIRY_MINUTES),
+            ]);
         }
 
         // Simpan ke profil bila dicentang (biar checkout berikutnya terisi otomatis).

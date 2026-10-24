@@ -16,7 +16,7 @@
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[#eef2f0] text-gray-900 antialiased dark:bg-night-950 dark:text-cream-100 transition-colors duration-300">
+<body class="h-screen overflow-hidden bg-[#eef2f0] text-gray-900 antialiased dark:bg-night-950 dark:text-cream-100 transition-colors duration-300">
 
 @php
 $menu = [
@@ -25,13 +25,12 @@ $menu = [
     ['route' => 'admin.categories.index', 'match' => 'admin.categories.*', 'icon' => 'folder', 'label' => 'Kategori', 'badge' => null],
     ['route' => 'admin.orders.index', 'match' => 'admin.orders.*', 'icon' => 'receipt', 'label' => 'Pesanan', 'badge' => $adminPendingCount ?? 0],
     ['route' => 'admin.payment-methods.index', 'match' => 'admin.payment-methods.*', 'icon' => 'card', 'label' => 'Pembayaran', 'badge' => null],
-    ['route' => 'admin.subscribers.index', 'match' => 'admin.subscribers.*', 'icon' => 'chat', 'label' => 'Newsletter', 'badge' => null],
 ];
 @endphp
 
-<div class="flex min-h-screen">
+<div class="flex h-screen overflow-hidden">
     {{-- Sidebar desktop --}}
-    <aside class="hidden w-64 shrink-0 flex-col bg-white/80 backdrop-blur border-r border-gray-200/70 lg:flex dark:bg-night-800/80 dark:border-cream-100/10">
+    <aside class="hidden h-screen w-64 shrink-0 flex-col bg-white/80 backdrop-blur border-r border-gray-200/70 lg:flex dark:bg-night-800/80 dark:border-cream-100/10">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-6 pt-7 pb-6">
             <span class="grid h-10 w-10 place-items-center rounded-2xl bg-teal-300 text-teal-950 font-black text-xl dark:bg-sage-500 dark:text-night-950">S</span>
             <span class="leading-tight">
@@ -39,7 +38,7 @@ $menu = [
                 <span class="block text-[11px] uppercase tracking-[0.2em] text-gray-400">Admin Panel</span>
             </span>
         </a>
-        <nav class="flex-1 space-y-1 px-4">
+        <nav class="min-h-0 flex-1 space-y-1 overflow-y-auto px-4">
             @foreach($menu as $item)
             @php $active = request()->routeIs($item['match']); @endphp
             <a href="{{ route($item['route']) }}"
@@ -69,9 +68,9 @@ $menu = [
     </aside>
 
     {{-- Kolom kanan --}}
-    <div class="min-w-0 flex-1">
+    <div class="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
         {{-- Topbar --}}
-        <header class="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-gray-200/70 bg-[#eef2f0]/85 px-4 sm:px-8 backdrop-blur-xl dark:bg-night-950/85 dark:border-cream-100/10">
+        <header class="z-30 flex h-16 shrink-0 items-center gap-3 border-b border-gray-200/70 bg-[#eef2f0]/85 px-4 sm:px-8 backdrop-blur-xl dark:bg-night-950/85 dark:border-cream-100/10">
             <button type="button" data-admin-menu class="grid h-10 w-10 place-items-center rounded-xl bg-white border border-gray-200 lg:hidden dark:bg-night-800 dark:border-cream-100/15" aria-label="Menu">
                 <x-icon name="menu" class="h-5 w-5" />
             </button>
@@ -118,32 +117,35 @@ $menu = [
             </aside>
         </div>
 
-        {{-- Toasts --}}
-        @if(session('success') || session('error') || $errors->any())
-        <div class="mx-auto w-full max-w-6xl px-4 sm:px-8 pt-5 space-y-2">
-            @if(session('success'))
-                <div class="toast flex items-start gap-3 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm text-emerald-800 shadow-sm dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-300">
-                    <span class="text-emerald-500"><x-icon name="check-circle" class="h-5 w-5" /></span><span class="flex-1">{{ session('success') }}</span>
-                    <button data-toast-close class="opacity-60 hover:opacity-100"><x-icon name="x" class="h-4 w-4" /></button>
-                </div>
+        {{-- Area scroll kanan: sidebar tetap, konten ini yang discroll --}}
+        <div class="min-h-0 flex-1 overflow-y-auto">
+            {{-- Toasts --}}
+            @if(session('success') || session('error') || $errors->any())
+            <div class="mx-auto w-full max-w-6xl px-4 sm:px-8 pt-5 space-y-2">
+                @if(session('success'))
+                    <div class="toast flex items-start gap-3 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm text-emerald-800 shadow-sm dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-300">
+                        <span class="text-emerald-500"><x-icon name="check-circle" class="h-5 w-5" /></span><span class="flex-1">{{ session('success') }}</span>
+                        <button data-toast-close class="opacity-60 hover:opacity-100"><x-icon name="x" class="h-4 w-4" /></button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="toast flex items-start gap-3 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm text-red-700 shadow-sm dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-300">
+                        <span class="text-amber-500"><x-icon name="alert" class="h-5 w-5" /></span><span class="flex-1">{{ session('error') }}</span>
+                        <button data-toast-close class="opacity-60 hover:opacity-100"><x-icon name="x" class="h-4 w-4" /></button>
+                    </div>
+                @endif
+                @if($errors->any())
+                    <div class="toast rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm text-red-700 shadow-sm dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-300">
+                        <ul class="list-disc pl-5 space-y-0.5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
+                    </div>
+                @endif
+            </div>
             @endif
-            @if(session('error'))
-                <div class="toast flex items-start gap-3 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm text-red-700 shadow-sm dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-300">
-                    <span class="text-amber-500"><x-icon name="alert" class="h-5 w-5" /></span><span class="flex-1">{{ session('error') }}</span>
-                    <button data-toast-close class="opacity-60 hover:opacity-100"><x-icon name="x" class="h-4 w-4" /></button>
-                </div>
-            @endif
-            @if($errors->any())
-                <div class="toast rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm text-red-700 shadow-sm dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-300">
-                    <ul class="list-disc pl-5 space-y-0.5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
-                </div>
-            @endif
-        </div>
-        @endif
 
-        <main class="mx-auto w-full max-w-6xl px-4 sm:px-8 py-6">
-            @yield('content')
-        </main>
+            <main class="mx-auto w-full max-w-6xl px-4 sm:px-8 py-6">
+                @yield('content')
+            </main>
+        </div>
     </div>
 </div>
 

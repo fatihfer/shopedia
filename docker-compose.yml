@@ -13,7 +13,6 @@ services:
       DB_PORT: 3306
       RUN_MIGRATIONS: "true"
     volumes:
-      # Foto produk & bukti bayar biar tidak hilang saat container di-recreate
       - shopedia-storage:/var/www/html/storage/app/public
     depends_on:
       db:

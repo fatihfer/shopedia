@@ -42,10 +42,10 @@ class DashboardController extends Controller
 
         $maxRevenue = max(1, $week->max('revenue'));
 
-        $topProducts = OrderItem::select('product_id', DB::raw('SUM(quantity) as sold'))
+        $topProducts = OrderItem::select('product_id', 'product_name', DB::raw('SUM(quantity) as sold'))
             ->whereHas('order', fn ($q) => $q->whereIn('status', $paidStatuses))
             ->with('product.category')
-            ->groupBy('product_id')
+            ->groupBy('product_id', 'product_name')
             ->orderByDesc('sold')
             ->take(5)
             ->get();

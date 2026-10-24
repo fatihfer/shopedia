@@ -88,10 +88,8 @@
                         <span class="min-w-0 flex-1">
                             <span class="block font-bold">{{ $method->name }}</span>
                             <span class="block truncate text-xs text-cocoa-500/70">
-                                @if($method->isGateway())
-                                    Otomatis · QR dinamis per order
-                                @elseif($method->isQris())
-                                    Scan QR bayar instan
+                                @if($method->isQris())
+                                    Scan QR, bayar via link
                                 @else
                                     {{ $method->account_number }} a.n. {{ $method->account_name }}
                                 @endif

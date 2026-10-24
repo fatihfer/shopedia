@@ -15,8 +15,6 @@ class DemoPayTest extends TestCase
 
     private function checkoutDemo(User $customer, Product $product, PaymentMethod $method): Order
     {
-        config(['payment.demo_mode' => true]);
-
         $this->actingAs($customer);
         $this->post(route('cart.store', $product), ['quantity' => 1])->assertRedirect();
         $this->post(route('checkout.store'), [
@@ -31,7 +29,7 @@ class DemoPayTest extends TestCase
         return Order::latest()->first();
     }
 
-    public function test_demo_checkout_creates_pay_link_without_midtrans(): void
+    public function test_checkout_creates_pay_link(): void
     {
         $this->seed();
 
@@ -43,7 +41,6 @@ class DemoPayTest extends TestCase
 
         $this->assertNotNull($order->pay_token);
         $this->assertEquals(route('pay.show', ['token' => $order->pay_token]), $order->qr_string);
-        $this->assertStringStartsWith('DEMO-', $order->gateway_ref);
         $this->assertEquals('awaiting_payment', $order->status);
         $this->get(route('orders.show', $order))->assertSee('kamera HP');
     }

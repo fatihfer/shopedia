@@ -219,15 +219,8 @@
             </ul>
         </div>
         <div>
-            <h3 class="text-sm font-bold uppercase tracking-wider text-cocoa-500/70">Dapatkan Promo</h3>
-            <p class="mt-3 text-sm text-cocoa-500 dark:text-sage-300">Daftarkan email untuk info diskon & produk baru.</p>
-            <form method="POST" action="{{ route('newsletter.store') }}" class="mt-3 flex gap-2">
-                @csrf
-                <input type="email" name="email" required maxlength="100" placeholder="kamu@email.com"
-                    class="min-w-0 flex-1 rounded-2xl border border-line bg-milk-100 px-4 py-2.5 text-sm outline-none focus:border-apricot-400 dark:focus:border-sage-500 dark:bg-cream-100/5 dark:border-cream-100/15 transition">
-                <button class="shrink-0 rounded-2xl bg-night-950 px-4 py-2.5 text-sm font-bold text-cream-100 hover:bg-night-800 dark:bg-cream-100 dark:text-night-950 dark:hover:bg-cream-200 transition">OK</button>
-            </form>
-            <div class="mt-4 space-y-1.5 text-sm text-cocoa-500 dark:text-sage-300">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-cocoa-500/70">Jam Operasional</h3>
+            <div class="mt-3 space-y-1.5 text-sm text-cocoa-500 dark:text-sage-300">
                 <p>{{ config('contact.hours') }}</p>
                 @if(config('contact.admin_wa'))
                 <p>WA: {{ config('contact.admin_wa') }}</p>

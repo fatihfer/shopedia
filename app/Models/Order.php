@@ -9,14 +9,14 @@ class Order extends Model
 {
     public const EXPIRY_HOURS = 24;
 
+    public const PAYLINK_EXPIRY_MINUTES = 30;
+
     public const UNPAID_STATUSES = ['awaiting_payment', 'awaiting_verification'];
 
     protected $fillable = [
         'user_id',
         'payment_method_id',
-        'gateway_ref',
         'qr_string',
-        'qr_image_url',
         'pay_token',
         'total_price',
         'status',
@@ -69,11 +69,10 @@ class Order extends Model
         return in_array($this->status, self::UNPAID_STATUSES, true);
     }
 
-    public function isGateway(): bool
+    /** QRIS memakai link bayar (ada pay_token): tidak ada upload bukti manual. */
+    public function usesPayLink(): bool
     {
-        return (bool) $this->gateway_ref
-            && $this->paymentMethod !== null
-            && $this->paymentMethod->isGateway();
+        return (bool) $this->pay_token;
     }
 
     /** Kembalikan stok lalu tandai expired bila sudah lewat batas bayar. */

@@ -9,7 +9,7 @@
         <div class="mt-5 space-y-2 text-sm">
             @foreach($order->items as $item)
             <div class="flex justify-between gap-3 border-b border-line/60 pb-2 dark:border-cream-100/10">
-                <span>{{ $item->product->name ?? 'Produk' }} <span class="text-cocoa-500/70">×{{ $item->quantity }}</span></span>
+                <span>{{ $item->product_name ?? $item->product->name ?? 'Produk' }} <span class="text-cocoa-500/70">×{{ $item->quantity }}</span></span>
                 <span class="font-bold whitespace-nowrap">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</span>
             </div>
             @endforeach

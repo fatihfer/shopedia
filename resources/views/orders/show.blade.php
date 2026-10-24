@@ -57,7 +57,7 @@ $label = [
         <div class="mt-5 space-y-3">
             @foreach($order->items as $item)
             <div class="flex justify-between gap-3 border-b border-line/60 pb-3 text-sm dark:border-cream-100/10">
-                <div><p class="font-bold">{{ $item->product->name ?? 'Produk dihapus' }}</p><p class="text-cocoa-500">{{ $item->quantity }} × Rp {{ number_format($item->price, 0, ',', '.') }}</p></div>
+                <div><p class="font-bold">{{ $item->product_name ?? $item->product->name ?? 'Produk dihapus' }}</p><p class="text-cocoa-500">{{ $item->quantity }} × Rp {{ number_format($item->price, 0, ',', '.') }}</p></div>
                 <p class="font-extrabold whitespace-nowrap">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</p>
             </div>
             @endforeach
@@ -69,12 +69,8 @@ $label = [
         @if($order->isUnpaid())
         <div id="payment-card" class="rounded-3xl border border-line/70 bg-card p-6 dark:bg-night-800 dark:border-cream-100/15">
             <h2 class="flex items-center gap-2 font-extrabold"><x-icon name="card" class="h-5 w-5 text-ember-600 dark:text-sage-300" /> Bayar Pesanan</h2>
-            @if($order->isGateway() && $order->qr_string)
-                @if($order->pay_token)
-                    <p class="mt-2 text-sm text-cocoa-500">Scan dengan <span class="font-bold">kamera HP</span>, lalu tekan <span class="font-bold">Bayar</span> di halaman yang terbuka:</p>
-                @else
-                    <p class="mt-2 text-sm text-cocoa-500">Scan QR dinamis ini sejumlah nominal persis (khusus order ini):</p>
-                @endif
+            @if($order->usesPayLink() && $order->qr_string)
+                <p class="mt-2 text-sm text-cocoa-500">Scan dengan <span class="font-bold">kamera HP</span>, lalu tekan <span class="font-bold">Bayar</span> di halaman yang terbuka:</p>
                 <div class="mx-auto mt-3 w-fit rounded-2xl border border-line bg-white p-4 dark:border-cream-100/15 dark:bg-white">
                     <div id="qris-qr"></div>
                 </div>
@@ -82,35 +78,13 @@ $label = [
                     <span class="relative flex h-2.5 w-2.5"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span></span>
                     <span id="gateway-hint">Menunggu pembayaran — halaman cek otomatis</span>
                 </p>
-                <button type="button" id="sync-payment-btn" class="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-line bg-card py-2.5 text-sm font-bold hover:bg-milk-100 dark:border-cream-100/15 dark:hover:bg-cream-100/10 transition">
-                    <x-icon name="refresh" class="h-4 w-4" /> <span id="sync-payment-text">Saya sudah bayar, cek status</span>
-                </button>
-                <p id="sync-payment-msg" class="mt-1 hidden text-center text-xs font-semibold"></p>
-                @if($order->qr_image_url)
-                <details class="mt-3 rounded-2xl bg-milk-100 p-3 text-xs dark:bg-cream-100/5">
-                    <summary class="cursor-pointer font-bold">URL gambar QR (untuk Payment Simulator)</summary>
-                    <div class="mt-2 flex gap-2">
-                        <input id="qr-image-url" readonly value="{{ $order->qr_image_url }}" class="min-w-0 flex-1 rounded-xl border border-line bg-card px-3 py-2 text-[11px] dark:bg-cream-100/5 dark:border-cream-100/15">
-                        <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('qr-image-url').value); this.textContent = 'Disalin!';" class="shrink-0 rounded-xl bg-night-950 px-3 py-2 font-bold text-cream-100 dark:bg-cream-100 dark:text-night-950">Salin</button>
-                    </div>
-                </details>
-                @endif
-            @elseif($order->paymentMethod)
-                @if($order->paymentMethod->isQris())
-                    <p class="mt-2 text-sm text-cocoa-500">Scan QR {{ $order->paymentMethod->name }} sejumlah nominal persis:</p>
-                    @if($order->paymentMethod->qr_image)
-                        <img src="{{ asset('storage/' . $order->paymentMethod->qr_image) }}" alt="QRIS {{ $order->paymentMethod->name }}" class="mx-auto mt-3 w-52 rounded-2xl border border-line dark:border-cream-100/15">
-                    @else
-                        <p class="mt-3 rounded-2xl bg-sand-200/60 p-3 text-center text-xs text-cocoa-500">Gambar QR segera tersedia.</p>
-                    @endif
-                @else
-                    <p class="mt-2 text-sm text-cocoa-500">Transfer ke rekening berikut sejumlah nominal persis:</p>
-                    <div class="mt-3 rounded-2xl bg-milk-100 p-4 dark:bg-cream-100/5">
-                        <p class="text-xs text-cocoa-500/70">{{ $order->paymentMethod->name }}</p>
-                        <p class="text-xl font-black tracking-wider">{{ $order->paymentMethod->account_number }}</p>
-                        <p class="text-xs text-cocoa-500/70">a.n. {{ $order->paymentMethod->account_name }}</p>
-                    </div>
-                @endif
+            @elseif($order->paymentMethod && ! $order->paymentMethod->isQris())
+                <p class="mt-2 text-sm text-cocoa-500">Transfer ke rekening berikut sejumlah nominal persis:</p>
+                <div class="mt-3 rounded-2xl bg-milk-100 p-4 dark:bg-cream-100/5">
+                    <p class="text-xs text-cocoa-500/70">{{ $order->paymentMethod->name }}</p>
+                    <p class="text-xl font-black tracking-wider">{{ $order->paymentMethod->account_number }}</p>
+                    <p class="text-xs text-cocoa-500/70">a.n. {{ $order->paymentMethod->account_name }}</p>
+                </div>
             @endif
             <div class="mt-3 flex justify-between rounded-2xl bg-sand-200/60 p-3 text-sm dark:bg-sage-500/10">
                 <span class="font-medium">Nominal</span>
@@ -130,7 +104,7 @@ $label = [
             </div>
             @endif
 
-            @if(! $order->isGateway())
+            @if(! $order->usesPayLink())
             <form method="POST" action="{{ route('orders.proof', $order) }}" enctype="multipart/form-data" class="mt-4">
                 @csrf
                 <label class="text-sm font-bold">{{ $order->status === 'awaiting_verification' ? 'Ganti bukti pembayaran' : 'Upload bukti pembayaran' }}</label>
@@ -147,7 +121,7 @@ $label = [
             </form>
         </div>
 
-        @if($order->isGateway() && $order->qr_string)
+        @if($order->usesPayLink() && $order->qr_string)
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
         <script>
         (function () {
@@ -159,9 +133,6 @@ $label = [
             });
 
             const url = @json(route('orders.payment-status', $order));
-            const syncUrl = @json(route('orders.sync-payment', $order));
-            const csrf = document.querySelector('meta[name="csrf-token"]')?.content
-                ?? document.querySelector('input[name="_token"]')?.value;
             const statusLabels = @json($label);
             const statusBadges = @json($badge);
             const UNPAID = ['awaiting_payment', 'awaiting_verification'];
@@ -203,41 +174,6 @@ $label = [
                 if (hint) hint.textContent = paid ? 'Pembayaran diterima!' : 'Status: ' + (statusLabels[status] ?? status);
             }
 
-            async function syncNow(showMsg) {
-                const btn = document.getElementById('sync-payment-btn');
-                const txt = document.getElementById('sync-payment-text');
-                const msg = document.getElementById('sync-payment-msg');
-                btn.disabled = true;
-                txt.textContent = 'Mengecek ke Midtrans...';
-                try {
-                    const res = await fetch(syncUrl, {
-                        method: 'POST',
-                        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrf },
-                    });
-                    const data = await res.json();
-                    if (data.paid || !['awaiting_payment', 'awaiting_verification'].includes(data.status)) {
-                        applyState(data.status, data.paid);
-                        return true;
-                    }
-                    if (showMsg) {
-                        msg.textContent = 'Midtrans masih mencatat BELUM BAYAR. Selesaikan pembayaran / simulasi dulu.';
-                        msg.className = 'mt-1 text-center text-xs font-semibold text-amber-600';
-                        msg.classList.remove('hidden');
-                    }
-                } catch (e) {
-                    if (showMsg) {
-                        msg.textContent = 'Gagal menghubungi Midtrans, coba lagi.';
-                        msg.className = 'mt-1 text-center text-xs font-semibold text-red-500';
-                        msg.classList.remove('hidden');
-                    }
-                }
-                btn.disabled = false;
-                txt.textContent = 'Saya sudah bayar, cek status';
-                return false;
-            }
-
-            document.getElementById('sync-payment-btn').addEventListener('click', () => syncNow(true));
-            syncNow(false);
             timer = setInterval(async () => {
                 try {
                     const res = await fetch(url, { headers: { 'Accept': 'application/json' } });

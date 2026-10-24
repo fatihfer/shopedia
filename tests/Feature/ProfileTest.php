@@ -39,7 +39,6 @@ class ProfileTest extends TestCase
 
     public function test_checkout_prefills_and_saves_profile(): void
     {
-        config(['payment.demo_mode' => true]);
         $this->seed();
 
         $customer = User::where('email', 'customer@shopedia.test')->first();

@@ -64,6 +64,7 @@ class EcommerceTest extends TestCase
         $this->assertEquals($stockBefore - 2, $product->fresh()->stock);
         $this->assertEquals('awaiting_payment', $order->status);
         $this->assertNotNull($order->expired_at);
+        $this->assertEquals($product->name, $order->items()->first()->product_name);
 
         // 6. Upload bukti pembayaran
         $this->get(route('orders.show', $order))->assertOk()->assertSee('Bayar Pesanan');

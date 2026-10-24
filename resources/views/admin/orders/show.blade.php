@@ -15,7 +15,7 @@
         </p>
         <div class="mt-4 space-y-2 text-sm">
             @foreach($order->items as $item)
-            <div class="flex justify-between gap-3 rounded-2xl bg-milk-100 p-3 dark:bg-cream-100/5"><span class="truncate">{{ $item->product->name ?? '-' }} × {{ $item->quantity }}</span><span class="font-bold whitespace-nowrap">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</span></div>
+            <div class="flex justify-between gap-3 rounded-2xl bg-milk-100 p-3 dark:bg-cream-100/5"><span class="truncate">{{ $item->product_name ?? $item->product->name ?? '-' }} × {{ $item->quantity }}</span><span class="font-bold whitespace-nowrap">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</span></div>
             @endforeach
         </div>
         <p class="mt-4 flex justify-between font-black text-lg"><span>Total</span><span class="text-gradient">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span></p>

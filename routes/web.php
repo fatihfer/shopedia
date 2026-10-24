@@ -5,25 +5,21 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PaymentMethodController as AdminPaymentMethodController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\InfoController;
-use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\PayController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SubscriberController;
 use Illuminate\Support\Facades\Route;
 
 // Storefront
 Route::get('/', [ProductController::class, 'index'])->name('home');
 Route::get('/kontak', fn () => view('contact'))->name('contact');
 Route::get('/info/{slug}', [InfoController::class, 'show'])->name('info.show');
-Route::post('/newsletter', [SubscriberController::class, 'store'])->name('newsletter.store');
 
 // Halaman bayar publik via token (mode demo, tanpa login)
 Route::get('/bayar/{token}', [PayController::class, 'show'])->name('pay.show');
@@ -31,10 +27,6 @@ Route::post('/bayar/{token}', [PayController::class, 'confirm'])
     ->middleware('throttle:10,1')
     ->name('pay.confirm');
 
-// Webhook Midtrans (tanpa CSRF karena dipanggil server-to-server)
-Route::post('/midtrans/notify', [MidtransWebhookController::class, 'handle'])
-    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])
-    ->name('midtrans.notify');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
@@ -70,7 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{order}/payment-status', [OrderController::class, 'paymentStatus'])->name('orders.payment-status');
-    Route::post('/orders/{order}/sync-payment', [OrderController::class, 'syncPayment'])->name('orders.sync-payment');
     Route::post('/orders/{order}/proof', [OrderController::class, 'uploadProof'])->name('orders.proof');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
@@ -91,6 +82,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('orders/{order}/notify', [AdminOrderController::class, 'notify'])->name('orders.notify');
 
     Route::resource('payment-methods', AdminPaymentMethodController::class)->except(['show']);
-
-    Route::get('subscribers', [AdminSubscriberController::class, 'index'])->name('subscribers.index');
 });

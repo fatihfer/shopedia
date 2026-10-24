@@ -88,7 +88,7 @@
                     @endif
                 </div>
                 <div class="p-3">
-                    <p class="line-clamp-1 text-sm font-bold">{{ $item->product->name ?? '-' }}</p>
+                    <p class="line-clamp-1 text-sm font-bold">{{ $item->product_name ?? $item->product->name ?? '-' }}</p>
                     <p class="text-xs text-gray-400">{{ $item->sold }} terjual</p>
                 </div>
             </div>
