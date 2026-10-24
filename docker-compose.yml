@@ -39,17 +39,6 @@ services:
       retries: 20
     restart: unless-stopped
 
-  # Opsional: database manager di http://SERVER:8081 (hapus service ini kalau tidak perlu)
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - "8081:80"
-    environment:
-      PMA_HOST: db
-    depends_on:
-      - db
-    restart: unless-stopped
-
 volumes:
   shopedia-storage:
   shopedia-db:
