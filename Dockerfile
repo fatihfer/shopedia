@@ -19,7 +19,7 @@ RUN php artisan package:discover --ansi || true
 RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
 
 # ---------- Stage 3: runtime Apache + PHP 8.3 ----------
-FROM php:8.3-apache
+FROM php:8.3.36-apache
 
 # Ekstensi yang dibutuhkan Laravel + upload gambar + MySQL
 RUN apt-get update && apt-get install -y --no-install-recommends \
