@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "${APP_PORT:-8080}:80"
+      - "127.0.0.1:${APP_PORT:-8080}:80"
     # File .env di folder project (TIDAK di-commit). Compose otomatis
     # memakainya untuk interpolasi ${...} di bawah, jadi tidak perlu
     # flag --env-file lagi. Cukup: docker compose up -d --build
